@@ -1,0 +1,4 @@
+f55ee1,127.0.0.1,OPTIONS,http://localhost:8000/api/register,1745936071,,200,request
+df34ee,127.0.0.1,OPTIONS,http://localhost:8000/api/register,1745936072,,200,request
+007aef,127.0.0.1,GET,http://localhost:8000/api/register,1745936074,9f40b3,500,request
+9f40b3,127.0.0.1,POST,http://localhost:8000/api/register,1745936074,,500,request

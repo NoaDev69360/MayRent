@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+/vendor/
+/assets/build/
+
+# Environnement
+/.env
+/.env.local
+/.env.*.local
+
+# Symfony
+/var/
+/public/bundles/
+/phpunit.xml
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+
+# Système
+.DS_Store

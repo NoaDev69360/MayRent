@@ -1,0 +1,79 @@
+/* Structure de base */
+.main-header {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  /* Logo */
+  .logo-link {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 40px; /* Ajustez selon votre logo */
+    width: auto;
+  }
+  
+  /* Boutons à droite */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .action-button {
+    padding: 8px 16px;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .create-ad {
+    background-color: #3b82f6; /* Bleu Tailwind-500 */
+    color: white;
+  }
+  
+  .create-ad:hover {
+    background-color: #2563eb; /* Bleu plus foncé */
+  }
+  
+  .help {
+    color: #4b5563; /* Gris-600 */
+  }
+  
+  .help:hover {
+    color: #1f2937; /* Gris-800 */
+    text-decoration: underline;
+  }
+  
+  /* Icône utilisateur */
+  .login-icon {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-icon {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  
+  .user-icon:hover {
+    transform: scale(1.1);
+  }
