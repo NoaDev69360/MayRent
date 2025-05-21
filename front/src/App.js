@@ -8,7 +8,7 @@ import './App.css';
 
 // Import des images
 import img44 from './img/img-4X42.png';
-import imgCamion from './img/img-camion.png';
+import imgCamion from './img/img-camion-chantier.png';
 import imgCitadine from './img/img-citadine2.png';
 import imgElectrique from './img/img-electrique2.png';
 import imgSportive from './img/img-sportive2.png';
@@ -64,11 +64,11 @@ function App() {
                             <div className="car-types-grid">
                                 <div className="car-type-card">
                                     <img src={img44} alt="4x4" />
-                                    <span>4x4</span>
+                                    <span>4x4 / SUV</span>
                                 </div>
                                 <div className="car-type-card">
-                                    <img src={imgCamion} alt="Camion" />
-                                    <span>Camion</span>
+                                    <img src={imgCamion} alt="Camion de chantier" />
+                                    <span>Camion de chantier</span>
                                 </div>
                                 <div className="car-type-card">
                                     <img src={imgCitadine} alt="Citadine" />
