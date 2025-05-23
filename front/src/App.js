@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import SignupForm from './page/inscription';
 import Connexion from './page/connexion';
 import Header from './components/Header';
 import FormFilterAccueil from './components/FormFilterAccueil';
+import IntermediaireProduit from './page/IntermediaireProduit';
+import SearchButton from './components/SearchButton';
 import './App.css';
 
 // Import des images
@@ -20,6 +22,9 @@ import trustpilot from './img/trustpilote.png';
 import logo from './img/logomyrentwhite.png';
 
 function App() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const isLoginPage = location.pathname === '/connexion';
     const [currentSlide, setCurrentSlide] = useState(0);
     const [activeFaq, setActiveFaq] = useState(null);
     const totalSlides = 3; // Nombre total de slides
@@ -46,12 +51,17 @@ function App() {
         setActiveFaq(activeFaq === index ? null : index);
     };
 
+    const handleSearchClick = () => {
+        navigate('/intermediaire-produit');
+    };
+
     return (
         <div className="App">
-            <Header />
+            {!isLoginPage && <Header />}
             <Routes>
                 <Route path="/connexion" element={<Connexion />} />
                 <Route path="/inscription" element={<SignupForm />} />
+                <Route path="/intermediaire-produit" element={<IntermediaireProduit />} />
                 <Route path="/" element={
                     <>
                         <FormFilterAccueil />
@@ -85,7 +95,8 @@ function App() {
                             </div>
                         </div>
                         <div className="favorite-cars-section">
-                            <h2>Découvrez nos voitures coup de cœur</h2>
+                            <h2>Nos Véhicules Favoris</h2>
+                            <p>Découvrez notre sélection de véhicules les plus populaires</p>
                             <div className="favorite-cars-grid">
                                 <div className="favorite-car-card">
                                     <div className="placeholder-image"></div>
@@ -97,7 +108,9 @@ function App() {
                                     <div className="placeholder-image"></div>
                                 </div>
                             </div>
-                            <button className="search-button">Rechercher une voiture</button>
+                            <div className="favorite-cars-button">
+                                <button onClick={handleSearchClick} className="search-button">Tous nos véhicules</button>
+                            </div>
                         </div>
                         <div className="about-section">
                             <div className="about-content">

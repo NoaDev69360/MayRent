@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 import logo from '../img/logomyrentwhite.png';
+import logoAdmin from '../img/logo-admin.png';
+import headerImage from '../img/image-header.png';
+import headerImageCamion from '../img/image-header-camion.png';
 
 function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -25,8 +28,12 @@ function Header() {
         <div className="header-container">
             {!isLoginPage && (
                 <>
-                    <div className="header-image"></div>
-                    <div className="header-image-camion"></div>
+                    <div className="header-image">
+                        <img src={headerImage} alt="Header" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div className="header-image-camion">
+                        <img src={headerImageCamion} alt="Header Camion" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
                 </>
             )}
             <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
@@ -37,6 +44,10 @@ function Header() {
                     <nav className="nav-links">
                         <Link to="/connexion" className="nav-button">Connexion</Link>
                         <Link to="/inscription" className="nav-button">Inscription</Link>
+                        <Link to="/admin" className="nav-button account-button">
+                            Mon compte
+                            <img src={logoAdmin} alt="Admin" />
+                        </Link>
                     </nav>
                 </div>
             </header>

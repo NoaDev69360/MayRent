@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './connexion.css';
 import logo from '../img/logomyrentwhite.png';
 
@@ -10,27 +10,169 @@ function Connexion() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [siret, setSiret] = useState('');
+    const [phone, setPhone] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLoginSubmit = (e) => {
+    // Vérifier si l'utilisateur est déjà connecté
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Vérifier si le token est valide
+            fetch('http://localhost:3000/api/auth/verify', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    navigate('/');
+                } else {
+                    localStorage.removeItem('token');
+                }
+            })
+            .catch(() => {
+                localStorage.removeItem('token');
+            });
+        }
+    }, [navigate]);
+
+    const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        console.log('Tentative de connexion avec:', email, password);
+        setError('');
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erreur lors de la connexion');
+            }
+
+            // Stockage du token JWT
+            localStorage.setItem('token', data.token);
+            
+            // Stockage des informations utilisateur
+            localStorage.setItem('user', JSON.stringify({
+                email: data.user.email,
+                firstName: data.user.firstName,
+                lastName: data.user.lastName,
+                type: data.user.type
+            }));
+
+            // Redirection vers la page d'accueil
+            navigate('/');
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
-    const handleSignupSubmit = (e) => {
+    const handleSignupSubmit = async (e) => {
         e.preventDefault();
-        console.log('Inscription particulier:', { firstName, lastName, email, password });
+        setError('');
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    phone,
+                    type: 'particulier'
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erreur lors de l\'inscription');
+            }
+
+            // Stockage du token JWT après inscription réussie
+            localStorage.setItem('token', data.token);
+            
+            // Stockage des informations utilisateur
+            localStorage.setItem('user', JSON.stringify({
+                email: data.user.email,
+                firstName: data.user.firstName,
+                lastName: data.user.lastName,
+                type: data.user.type
+            }));
+
+            // Redirection vers la page d'accueil
+            navigate('/');
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
-    const handleProSignupSubmit = (e) => {
+    const handleProSignupSubmit = async (e) => {
         e.preventDefault();
-        console.log('Inscription professionnel:', { firstName, lastName, email, password, siret });
+        setError('');
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    phone,
+                    siret,
+                    type: 'professionnel'
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erreur lors de l\'inscription');
+            }
+
+            // Stockage du token JWT après inscription réussie
+            localStorage.setItem('token', data.token);
+            
+            // Stockage des informations utilisateur
+            localStorage.setItem('user', JSON.stringify({
+                email: data.user.email,
+                firstName: data.user.firstName,
+                lastName: data.user.lastName,
+                type: data.user.type,
+                siret: data.user.siret
+            }));
+
+            // Redirection vers la page d'accueil
+            navigate('/');
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    // Fonction pour se déconnecter
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/connexion');
     };
 
     return (
         <div className="login-container">
             <div className="login-form-section">
                 <div className="login-form-container">
+                    {error && <div className="error-message">{error}</div>}
                     <div className="tabs">
                         <button 
                             className={`tab ${activeTab === 'login' ? 'active' : ''}`}
@@ -116,6 +258,16 @@ function Connexion() {
                                 />
                             </div>
                             <div className="form-group">
+                                <label htmlFor="signup-phone">Téléphone</label>
+                                <input
+                                    type="tel"
+                                    id="signup-phone"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
                                 <label htmlFor="signup-password">Mot de passe</label>
                                 <input
                                     type="password"
@@ -173,6 +325,16 @@ function Connexion() {
                                 />
                             </div>
                             <div className="form-group">
+                                <label htmlFor="pro-phone">Téléphone</label>
+                                <input
+                                    type="tel"
+                                    id="pro-phone"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
                                 <label htmlFor="pro-password">Mot de passe</label>
                                 <input
                                     type="password"
@@ -188,7 +350,9 @@ function Connexion() {
                 </div>
             </div>
             <div className="login-image-section">
-                <img src={logo} alt="MayRent Logo" />
+                <Link to="/">
+                    <img src={logo} alt="MayRent Logo" />
+                </Link>
             </div>
         </div>
     );

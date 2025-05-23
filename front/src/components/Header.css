@@ -15,10 +15,6 @@
     left: 0;
     width: 50%;
     height: 100%;
-    background-image: url('../img/image-header.png');
-    background-size: 100% 100%;
-    background-position: center;
-    background-repeat: no-repeat;
     z-index: 1;
 }
 
@@ -28,10 +24,6 @@
     right: 0;
     width: 50%;
     height: 100%;
-    background-image: url('../img/image-header-camion.png');
-    background-size: 100% 100%;
-    background-position: center;
-    background-repeat: no-repeat;
     z-index: 1;
 }
 
@@ -93,6 +85,15 @@
     padding: 0.7rem 1.5rem;
     border-radius: 15px;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.account-button img {
+    height: 20px;
+    width: auto;
+    margin-left: 0.5rem;
 }
 
 .nav-button:hover {
@@ -127,6 +128,18 @@
 
 .header.scrolled .logo img {
     height: 50px;
+}
+
+.admin-logo {
+    display: none;
+}
+
+.admin-logo img {
+    display: none;
+}
+
+.admin-logo:hover img {
+    display: none;
 }
 
 @media (max-width: 768px) {

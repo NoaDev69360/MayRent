@@ -65,6 +65,24 @@
     cursor: pointer;
 }
 
+.search-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+.search-button:hover {
+    background-color: #003d7a;
+}
+
 @media (max-width: 768px) {
     .search-form-container {
         left: 50%;
