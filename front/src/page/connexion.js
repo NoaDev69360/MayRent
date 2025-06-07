@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { api } from '../config/api';
 import './connexion.css';
 import logo from '../img/logomyrentwhite.png';
 
@@ -41,19 +42,7 @@ function Connexion() {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:3000/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Erreur lors de la connexion');
-            }
+            const data = await api.post('/login', { email, password });
 
             // Stockage du token JWT
             localStorage.setItem('token', data.token);
@@ -77,26 +66,13 @@ function Connexion() {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:3000/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    email,
-                    password,
-                    phone,
-                    type: 'particulier'
-                }),
+            const data = await api.post('/register', {
+                prenom: firstName,
+                nom: lastName,
+                email: email,
+                password: password,
+                telephone: phone
             });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Erreur lors de l\'inscription');
-            }
 
             // Stockage du token JWT après inscription réussie
             localStorage.setItem('token', data.token);
@@ -120,27 +96,15 @@ function Connexion() {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:3000/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    email,
-                    password,
-                    phone,
-                    siret,
-                    type: 'professionnel'
-                }),
+            const data = await api.post('/register', {
+                prenom: firstName,
+                nom: lastName,
+                email: email,
+                password: password,
+                telephone: phone,
+                siret: siret,
+                type: 'professionnel'
             });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Erreur lors de l\'inscription');
-            }
 
             // Stockage du token JWT après inscription réussie
             localStorage.setItem('token', data.token);

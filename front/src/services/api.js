@@ -1,25 +1,57 @@
 // Configuration de base pour les requêtes API
-const API_URL = 'http://localhost:3001/api'; // Remplacez par votre URL d'API
+const API_URL = 'http://localhost:8000/api'; // URL complète de l'API
 
 // Fonction utilitaire pour les requêtes fetch
 const fetchApi = async (endpoint, options = {}) => {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...options.headers,
+      },
+      mode: 'cors',
+      credentials: 'include',
+    });
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Une erreur est survenue');
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Une erreur est survenue');
   }
-
-  return response.json();
 };
 
 // Exemple de fonctions pour les requêtes API
 export const api = {
+  // Méthode POST générique
+  post: (endpoint, data) => fetchApi(endpoint, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+
+  // Méthode GET générique
+  get: (endpoint) => fetchApi(endpoint),
+
+  // Méthode PUT générique
+  put: (endpoint, data) => fetchApi(endpoint, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+
+  // Méthode DELETE générique
+  delete: (endpoint) => fetchApi(endpoint, {
+    method: 'DELETE',
+  }),
+
   // Récupérer la liste des voitures
   getCars: () => fetchApi('/cars'),
   

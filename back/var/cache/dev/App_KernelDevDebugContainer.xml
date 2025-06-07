@@ -259,6 +259,7 @@
       <parameter key="^/api/" type="collection">
         <parameter key="allow_origin" type="collection">
           <parameter>http://localhost:3000</parameter>
+          <parameter>http://localhost:8000</parameter>
         </parameter>
         <parameter key="allow_headers" type="collection">
           <parameter>content-type</parameter>
@@ -298,6 +299,7 @@
     <parameter key="nelmio_cors.defaults" type="collection">
       <parameter key="allow_origin" type="collection">
         <parameter>http://localhost:3000</parameter>
+        <parameter>http://localhost:8000</parameter>
       </parameter>
       <parameter key="allow_credentials">true</parameter>
       <parameter key="allow_headers" type="collection">
@@ -501,7 +503,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.l8POw2m"/>
+      <argument type="service" id=".service_locator.A4i4gKC"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -3431,7 +3433,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.l8POw2m"/>
+      <argument type="service" id=".service_locator.A4i4gKC"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -8158,31 +8160,32 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.4wc4Ag1" method="withContext"/>
     </service>
-    <service id=".service_locator.1mHHRA4" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.LenB0IS" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
         <argument key="validator" type="service_closure" id="debug.validator"/>
+        <argument key="jwtManager" type="service_closure" id="lexik_jwt_authentication.jwt_manager"/>
       </argument>
     </service>
-    <service id=".service_locator.1mHHRA4.App\Controller\InscriptionController::register()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.LenB0IS.App\Controller\InscriptionController::register()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\InscriptionController::register()"/>
       <argument>App\Controller\InscriptionController::register()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.1mHHRA4" method="withContext"/>
+      <factory service=".service_locator.LenB0IS" method="withContext"/>
     </service>
-    <service id=".service_locator.l8POw2m" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.A4i4gKC" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.4wc4Ag1.kernel::loadRoutes()"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.4wc4Ag1.kernel::loadRoutes()"/>
-        <argument key="App\Controller\InscriptionController::register" type="service_closure" id=".service_locator.1mHHRA4.App\Controller\InscriptionController::register()"/>
+        <argument key="App\Controller\InscriptionController::register" type="service_closure" id=".service_locator.LenB0IS.App\Controller\InscriptionController::register()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.4wc4Ag1.kernel::loadRoutes()"/>
-        <argument key="App\Controller\InscriptionController:register" type="service_closure" id=".service_locator.1mHHRA4.App\Controller\InscriptionController::register()"/>
+        <argument key="App\Controller\InscriptionController:register" type="service_closure" id=".service_locator.LenB0IS.App\Controller\InscriptionController::register()"/>
       </argument>
     </service>
     <service id=".service_locator.ea.H0ae" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -10349,7 +10352,7 @@
     <service id="lexik_jwt_authentication.key_loader" alias="lexik_jwt_authentication.key_loader.raw" public="true"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.pRu6x_4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.l8POw2m"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.A4i4gKC"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.BxSdgVt"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -10392,7 +10395,7 @@
     <service id="messenger.bus.default" alias="debug.traced.messenger.bus.default"/>
     <service id="doctrine.orm.default_metadata_driver" alias=".doctrine.orm.default_metadata_driver"/>
     <service id=".service_locator.diNoEIK" alias=".service_locator.4wc4Ag1"/>
-    <service id=".service_locator.qLudaRR" alias=".service_locator.1mHHRA4"/>
+    <service id=".service_locator.JbeWkKi" alias=".service_locator.LenB0IS"/>
     <service id=".service_locator.b491maD" alias=".service_locator.QaaoWjx"/>
   </services>
 </container>

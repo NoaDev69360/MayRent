@@ -14,6 +14,12 @@ export const api = {
                 credentials: 'include',
                 body: JSON.stringify(data),
             });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Une erreur est survenue');
+            }
+            
             return await response.json();
         } catch (error) {
             console.error('API Error:', error);
@@ -28,6 +34,12 @@ export const api = {
                 headers: defaultHeaders,
                 credentials: 'include',
             });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Une erreur est survenue');
+            }
+            
             return await response.json();
         } catch (error) {
             console.error('API Error:', error);
@@ -43,6 +55,12 @@ export const api = {
                 credentials: 'include',
                 body: JSON.stringify(data),
             });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Une erreur est survenue');
+            }
+            
             return await response.json();
         } catch (error) {
             console.error('API Error:', error);
@@ -57,6 +75,12 @@ export const api = {
                 headers: defaultHeaders,
                 credentials: 'include',
             });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Une erreur est survenue');
+            }
+            
             return await response.json();
         } catch (error) {
             console.error('API Error:', error);
