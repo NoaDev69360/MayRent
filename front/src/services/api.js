@@ -1,5 +1,5 @@
 // Configuration de base pour les requêtes API
-const API_URL = 'http://localhost:8000/api'; // URL complète de l'API
+const API_URL = 'http://localhost/MayRent/back/public/api'; // URL complète de l'API
 
 // Fonction utilitaire pour les requêtes fetch
 const fetchApi = async (endpoint, options = {}) => {

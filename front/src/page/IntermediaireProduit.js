@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import MapView from '../components/MapView';
 import './IntermediaireProduit.css';
 
 function IntermediaireProduit() {
+    const navigate = useNavigate();
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 1000]);
     const [selectedTypes, setSelectedTypes] = useState([]);
@@ -60,6 +62,10 @@ function IntermediaireProduit() {
 
     const toggleView = () => {
         setIsMapView(!isMapView);
+    };
+
+    const handleRentClick = () => {
+        navigate('/produits');
     };
 
     return (
@@ -128,13 +134,14 @@ function IntermediaireProduit() {
                             {isMapView ? 'Voir la liste' : 'Voir sur la carte'}
                         </button>
                     </div>
-                    {isMapView ? (
-                        <MapView vehicles={vehicles} />
-                    ) : (
-                        <div className="categories-container">
-                            {/* Le contenu de la liste sera ajouté ici */}
-                        </div>
-                    )}
+                    <div className="products-grid">
+                        {[...Array(18)].map((_, index) => (
+                            <div key={index} className="product-card">
+                                <div className="product-image"></div>
+                                <button className="rent-button" onClick={handleRentClick}>Louer</button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

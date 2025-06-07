@@ -6,6 +6,7 @@ import Header from './components/Header';
 import FormFilterAccueil from './components/FormFilterAccueil';
 import IntermediaireProduit from './page/IntermediaireProduit';
 import SearchButton from './components/SearchButton';
+import Produits from './page/Produits';
 import './App.css';
 
 // Import des images
@@ -62,6 +63,7 @@ function App() {
                 <Route path="/connexion" element={<Connexion />} />
                 <Route path="/inscription" element={<SignupForm />} />
                 <Route path="/intermediaire-produit" element={<IntermediaireProduit />} />
+                <Route path="/produits" element={<Produits />} />
                 <Route path="/" element={
                     <>
                         <FormFilterAccueil />
