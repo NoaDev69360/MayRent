@@ -16,7 +16,7 @@ if (!\class_exists(App_KernelDevDebugContainer::class, false)) {
 
 return new \ContainerXBdoucm\App_KernelDevDebugContainer([
     'container.build_hash' => 'XBdoucm',
-    'container.build_id' => 'c5923391',
-    'container.build_time' => 1749324288,
+    'container.build_id' => 'c59d491c',
+    'container.build_time' => 1750339138,
     'container.runtime_mode' => \in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true) ? 'web=0' : 'web=1',
 ], __DIR__.\DIRECTORY_SEPARATOR.'ContainerXBdoucm');

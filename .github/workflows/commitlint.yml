@@ -1,0 +1,23 @@
+name: Commit Message Lint
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install commitlint
+        run: npm install --global @commitlint/{config-conventional,cli}
+      - name: Lint commit messages
+        run: |
+          COMMITS=$(git log origin/main..HEAD --pretty=format:"%s")
+          for COMMIT in $COMMITS; do
+            echo "$COMMIT" | npx commitlint --config node_modules/@commitlint/config-conventional; 
+          done 
