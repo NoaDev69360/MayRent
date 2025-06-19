@@ -19,11 +19,11 @@ jobs:
           node-version: '18'
       - name: Install frontend dependencies
         run: |
-          cd MayRent/front
+          cd front
           npm install
       - name: Run npm audit
         run: |
-          cd MayRent/front
+          cd front
           npm audit --audit-level=high
 
       # PHP Security Audit
@@ -33,9 +33,9 @@ jobs:
           php-version: '8.2'
       - name: Install Composer dependencies
         run: |
-          cd MayRent/back
+          cd back
           composer install --no-interaction
       - name: Run Symfony security:check
         run: |
-          cd MayRent/back
+          cd back
           if [ -f bin/console ]; then php bin/console security:check || true; fi 
