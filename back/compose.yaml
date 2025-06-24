@@ -20,6 +20,29 @@ services:
       # - ./docker/db/data:/var/lib/postgresql/data:rw
 ###< doctrine/doctrine-bundle ###
 
+  back:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "9000"
+    volumes:
+      - ./public:/var/www/public
+      # Ajoute d'autres volumes si besoin
+
+  nginx:
+    build:
+      context: ../nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../back/public:/var/www/public
+      - ../nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - database
+      - back
+
 volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:

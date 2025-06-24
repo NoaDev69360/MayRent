@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost/MayRent/back/public/api';
+const API_BASE_URL = 'http://localhost/api';
 
 const defaultHeaders = {
     'Content-Type': 'application/json',
@@ -11,7 +11,6 @@ export const api = {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: 'POST',
                 headers: defaultHeaders,
-                credentials: 'include',
                 body: JSON.stringify(data),
             });
             
@@ -32,7 +31,6 @@ export const api = {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: 'GET',
                 headers: defaultHeaders,
-                credentials: 'include',
             });
             
             if (!response.ok) {
@@ -52,7 +50,6 @@ export const api = {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: 'PUT',
                 headers: defaultHeaders,
-                credentials: 'include',
                 body: JSON.stringify(data),
             });
             
@@ -73,7 +70,6 @@ export const api = {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: 'DELETE',
                 headers: defaultHeaders,
-                credentials: 'include',
             });
             
             if (!response.ok) {

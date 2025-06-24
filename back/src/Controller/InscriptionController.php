@@ -22,11 +22,20 @@ class InscriptionController extends AbstractController
         ValidatorInterface $validator,
         JWTTokenManagerInterface $jwtManager
     ): JsonResponse {
+        // Gérer la requête OPTIONS pour le CORS
+        if ($request->getMethod() === 'OPTIONS') {
+            $response = new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+            $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
+            return $response;
+        }
+
         try {
             $data = json_decode($request->getContent(), true);
             
             if (json_last_error() !== JSON_ERROR_NONE) {
-                return new JsonResponse([
+                return $this->json([
                     'message' => 'Invalid JSON data'
                 ], JsonResponse::HTTP_BAD_REQUEST);
             }
@@ -36,7 +45,7 @@ class InscriptionController extends AbstractController
             $missingFields = array_filter($requiredFields, fn($field) => empty($data[$field]));
             
             if (!empty($missingFields)) {
-                return new JsonResponse([
+                return $this->json([
                     'message' => 'Missing required fields: ' . implode(', ', $missingFields)
                 ], JsonResponse::HTTP_BAD_REQUEST);
             }
@@ -54,7 +63,7 @@ class InscriptionController extends AbstractController
                 foreach ($errors as $error) {
                     $errorMessages[] = $error->getMessage();
                 }
-                return new JsonResponse([
+                return $this->json([
                     'message' => 'Validation failed',
                     'errors' => $errorMessages
                 ], JsonResponse::HTTP_BAD_REQUEST);
@@ -66,7 +75,7 @@ class InscriptionController extends AbstractController
             // Générer le token JWT
             $token = $jwtManager->create($client);
 
-            return new JsonResponse([
+            $response = $this->json([
                 'message' => 'Inscription réussie !',
                 'status' => 'success',
                 'token' => $token,
@@ -78,8 +87,10 @@ class InscriptionController extends AbstractController
                 ]
             ], JsonResponse::HTTP_CREATED);
 
+            return $response;
+
         } catch (\Exception $e) {
-            return new JsonResponse([
+            return $this->json([
                 'message' => 'Une erreur est survenue lors de l\'inscription',
                 'error' => $e->getMessage()
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);

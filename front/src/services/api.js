@@ -10,23 +10,32 @@ const fetchApi = async (endpoint, options = {}) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         ...options.headers,
-      },
+      },  
       mode: 'cors',
-      credentials: 'include',
+      credentials: 'omit', // On n'envoie pas de cookies pour l'instant
     });
 
-    const data = await response.json();
+    // Pour les requêtes OPTIONS, on retourne directement
+    if (options.method === 'OPTIONS') {
+      return null;
+    }
+
+    let data;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      data = await response.text();
+    }
 
     if (!response.ok) {
-      throw new Error(data.message || 'Une erreur est survenue');
+      throw new Error(data.message || data || `HTTP error! status: ${response.status}`);
     }
 
     return data;
   } catch (error) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error('Une erreur est survenue');
+    console.error('API Error:', error);
+    throw error;
   }
 };
 
