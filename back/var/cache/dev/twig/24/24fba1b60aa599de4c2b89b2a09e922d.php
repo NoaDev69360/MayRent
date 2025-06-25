@@ -221,6 +221,6 @@ class __TwigTemplate_597ba6c18024d678b1f36f440a5313d3 extends Template
         {% block body %}{% endblock %}
     </body>
 </html>
-", "base.html.twig", "C:\\wamp64\\www\\MayRent\\back\\templates\\base.html.twig");
+", "base.html.twig", "C:\\wamp64\\www\\EXAM-CDA\\MayRent\\back\\templates\\base.html.twig");
     }
 }

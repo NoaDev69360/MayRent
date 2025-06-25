@@ -26,10 +26,10 @@ class Voiture
     private ?string $prix_jour = null;
 
     #[ORM\ManyToOne(inversedBy: 'voitures')]
-    private ?client $id_client = null;
+    private ?Client $id_client = null;
 
     #[ORM\ManyToOne]
-    private ?categorie $id_categorie = null;
+    private ?Categorie $id_categorie = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
@@ -87,24 +87,24 @@ class Voiture
         return $this;
     }
 
-    public function getIdClient(): ?client
+    public function getIdClient(): ?Client
     {
         return $this->id_client;
     }
 
-    public function setIdClient(?client $id_client): static
+    public function setIdClient(?Client $id_client): static
     {
         $this->id_client = $id_client;
 
         return $this;
     }
 
-    public function getIdCategorie(): ?categorie
+    public function getIdCategorie(): ?Categorie
     {
         return $this->id_categorie;
     }
 
-    public function setIdCategorie(?categorie $id_categorie): static
+    public function setIdCategorie(?Categorie $id_categorie): static
     {
         $this->id_categorie = $id_categorie;
 

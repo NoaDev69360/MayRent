@@ -22,15 +22,6 @@ class InscriptionController extends AbstractController
         ValidatorInterface $validator,
         JWTTokenManagerInterface $jwtManager
     ): JsonResponse {
-        // Gérer la requête OPTIONS pour le CORS
-        if ($request->getMethod() === 'OPTIONS') {
-            $response = new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-            $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
-            $response->headers->set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
-            return $response;
-        }
-
         try {
             $data = json_decode($request->getContent(), true);
             

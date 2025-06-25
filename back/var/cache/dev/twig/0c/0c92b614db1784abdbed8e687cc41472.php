@@ -160,6 +160,6 @@ class __TwigTemplate_5a8249ceb9d6983f9556ebd0e77b5ff2 extends Template
     </ul>
 </div>
 {% endblock %}
-", "inscription/index.html.twig", "C:\\wamp64\\www\\MayRent\\back\\templates\\inscription\\index.html.twig");
+", "inscription/index.html.twig", "C:\\wamp64\\www\\EXAM-CDA\\MayRent\\back\\templates\\inscription\\index.html.twig");
     }
 }

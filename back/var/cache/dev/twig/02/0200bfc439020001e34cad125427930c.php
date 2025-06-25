@@ -160,6 +160,6 @@ class __TwigTemplate_fd2f5a27b9b600d2d2a990f6d9626fb1 extends Template
     </ul>
 </div>
 {% endblock %}
-", "reservation/index.html.twig", "C:\\wamp64\\www\\MayRent\\back\\templates\\reservation\\index.html.twig");
+", "reservation/index.html.twig", "C:\\wamp64\\www\\EXAM-CDA\\MayRent\\back\\templates\\reservation\\index.html.twig");
     }
 }
