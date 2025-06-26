@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
 import logo from '../img/logomyrentwhite.png';
 import logoAdmin from '../img/logo-admin.png';
@@ -8,7 +8,9 @@ import headerImageCamion from '../img/image-header-camion.png';
 
 function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
     const isLoginPage = location.pathname === '/connexion';
 
     useEffect(() => {
@@ -19,10 +21,20 @@ function Header() {
                 setIsScrolled(false);
             }
         };
-
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    useEffect(() => {
+        setIsLoggedIn(!!localStorage.getItem('token'));
+    }, [location]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setIsLoggedIn(false);
+        navigate('/connexion');
+    };
 
     return (
         <div className="header-container">
@@ -42,7 +54,11 @@ function Header() {
                         <img src={logo} alt="MayRent" />
                     </Link>
                     <nav className="nav-links">
-                        <Link to="/connexion" className="nav-button">Connexion</Link>
+                        {isLoggedIn ? (
+                            <button className="nav-button" onClick={handleLogout}>Déconnexion</button>
+                        ) : (
+                            <Link to="/connexion" className="nav-button">Connexion</Link>
+                        )}
                         <Link to="/inscription" className="nav-button">Inscription</Link>
                         <Link to="/admin" className="nav-button account-button">
                             Mon compte

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { api } from '../config/api';
 
 function SignupForm() {
+    const [activeTab, setActiveTab] = useState('particulier');
     const [formData, setFormData] = useState({
         prenom: '',
         nom: '',
@@ -9,8 +10,8 @@ function SignupForm() {
         password: '',
         confirmPassword: '',
         telephone: '',
+        siret: '', // Pour pro
     });
-
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +22,6 @@ function SignupForm() {
             ...formData,
             [name]: value,
         });
-        // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
@@ -49,23 +49,34 @@ function SignupForm() {
         } else if (!/^[0-9]{10}$/.test(formData.telephone.replace(/\s/g, ''))) {
             formErrors.telephone = 'Le numéro de téléphone doit contenir 10 chiffres';
         }
+        if (activeTab === 'pro' && !formData.siret) {
+            formErrors.siret = 'Le numéro SIRET est requis';
+        }
         return formErrors;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formErrors = validate();
-        
         if (Object.keys(formErrors).length === 0) {
             setIsLoading(true);
             try {
-                const response = await api.post('/register', {
+                let payload = {
                     prenom: formData.prenom,
                     nom: formData.nom,
                     email: formData.email,
                     password: formData.password,
                     telephone: formData.telephone
-                });
+                };
+                if (activeTab === 'pro') {
+                    payload.siret = formData.siret;
+                    payload.type = 'professionnel';
+                } else if (activeTab === 'locataire') {
+                    payload.type = 'locataire';
+                } else {
+                    payload.type = 'particulier';
+                }
+                await api.post('/register', payload);
                 setSubmitted(true);
                 setFormData({
                     prenom: '',
@@ -74,6 +85,7 @@ function SignupForm() {
                     password: '',
                     confirmPassword: '',
                     telephone: '',
+                    siret: '',
                 });
                 setErrors({});
             } catch (error) {
@@ -91,6 +103,11 @@ function SignupForm() {
     return (
         <div className="signup-container">
             <h2>Inscription</h2>
+            <div className="tabs" style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+                <button className={`tab ${activeTab === 'particulier' ? 'active' : ''}`} onClick={() => setActiveTab('particulier')}>Loueur Particulier</button>
+                <button className={`tab ${activeTab === 'pro' ? 'active' : ''}`} onClick={() => setActiveTab('pro')}>Loueur Professionnel</button>
+                <button className={`tab ${activeTab === 'locataire' ? 'active' : ''}`} onClick={() => setActiveTab('locataire')}>Locataire</button>
+            </div>
             {submitted && (
                 <div className="success-message">
                     Inscription réussie ! Vous pouvez maintenant vous connecter.
@@ -130,6 +147,19 @@ function SignupForm() {
                     />
                     {errors.email && <span className="error-message">{errors.email}</span>}
                 </div>
+                {activeTab === 'pro' && (
+                    <div className="form-group">
+                        <label>Numéro SIRET</label>
+                        <input
+                            type="text"
+                            name="siret"
+                            value={formData.siret}
+                            onChange={handleChange}
+                            className={errors.siret ? 'error' : ''}
+                        />
+                        {errors.siret && <span className="error-message">{errors.siret}</span>}
+                    </div>
+                )}
                 <div className="form-group">
                     <label>Mot de passe</label>
                     <input

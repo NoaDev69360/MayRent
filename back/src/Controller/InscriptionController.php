@@ -11,9 +11,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class InscriptionController extends AbstractController
 {
+    private $params;
+
+    public function __construct(ParameterBagInterface $params)
+    {
+        $this->params = $params;
+    }
+
     #[Route('/api/register', name: 'api_register', methods: ['OPTIONS', 'POST'])]
     public function register(
         Request $request,
@@ -22,6 +30,10 @@ class InscriptionController extends AbstractController
         ValidatorInterface $validator,
         JWTTokenManagerInterface $jwtManager
     ): JsonResponse {
+        // Utilisation du chemin absolu Symfony
+        $logPath = $this->params->get('kernel.project_dir') . '/var/roles_debug.txt';
+        file_put_contents($logPath, 'DEBUT INSCRIPTION');
+
         try {
             $data = json_decode($request->getContent(), true);
             
@@ -48,6 +60,38 @@ class InscriptionController extends AbstractController
             $client->setPassword($passwordHasher->hashPassword($client, $data['password']));
             $client->setTelephone($data['telephone']);
 
+            // Attribution du rôle selon le type d'inscription
+            $type = $data['type'] ?? null;
+            if ($type === 'professionnel' || isset($data['siret'])) {
+                $client->setRoles(['ROLE_PRO']);
+                $userType = 'professionnel';
+                $userRole = 'ROLE_PRO';
+            } elseif ($type === 'locataire') {
+                $client->setRoles(['ROLE_LOCATAIRE']);
+                $userType = 'locataire';
+                $userRole = 'ROLE_LOCATAIRE';
+            } else {
+                $client->setRoles(['ROLE_PARTICULIER']);
+                $userType = 'particulier';
+                $userRole = 'ROLE_PARTICULIER';
+            }
+            // Forcer la persistance du champ roles
+            $client->setRoles($client->getRawRoles());
+
+            // Log la valeur brute des rôles juste avant le flush dans var/
+            file_put_contents($logPath, json_encode([
+                'roles' => $client->getRawRoles(),
+                'type' => $type,
+                'data' => $data
+            ], JSON_PRETTY_PRINT));
+            if (method_exists($this, 'getLogger')) {
+                $this->getLogger()->info('Roles debug', [
+                    'roles' => $client->getRawRoles(),
+                    'type' => $type,
+                    'data' => $data
+                ]);
+            }
+
             $errors = $validator->validate($client);
             if (count($errors) > 0) {
                 $errorMessages = [];
@@ -55,7 +99,7 @@ class InscriptionController extends AbstractController
                     $errorMessages[] = $error->getMessage();
                 }
                 return $this->json([
-                    'message' => 'Validation failed',
+                    'message' => 'Erreur lors de l\'inscription',
                     'errors' => $errorMessages
                 ], JsonResponse::HTTP_BAD_REQUEST);
             }
@@ -74,9 +118,10 @@ class InscriptionController extends AbstractController
                     'email' => $client->getEmail(),
                     'firstName' => $client->getPrenom(),
                     'lastName' => $client->getNom(),
-                    'type' => 'particulier'
+                    'type' => $userType,
+                    'role' => $userRole
                 ]
-            ], JsonResponse::HTTP_CREATED);
+            ], JsonResponse::HTTP_OK);
 
             return $response;
 

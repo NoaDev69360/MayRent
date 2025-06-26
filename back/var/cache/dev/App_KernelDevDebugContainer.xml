@@ -403,7 +403,9 @@
         <parameter>@WebProfiler/Collector/config.html.twig</parameter>
       </parameter>
     </parameter>
-    <parameter key="console.command.ids" type="collection"/>
+    <parameter key="console.command.ids" type="collection">
+      <parameter>console.command.public_alias.App\Command\TestRoleCommand</parameter>
+    </parameter>
   </parameters>
   <services>
     <service id="service_container" class="Symfony\Component\DependencyInjection\ContainerInterface" public="true" synthetic="true"/>
@@ -413,6 +415,11 @@
     </service>
     <service id="App\Entity" class="App\Entity" abstract="true">
       <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
+    </service>
+    <service id="App\Command\TestRoleCommand" class="App\Command\TestRoleCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
     <service id="App\Controller\CategorieController" class="App\Controller\CategorieController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
@@ -7574,6 +7581,8 @@
         <argument>Generate public/private keys for use in your application.</argument>
       </call>
     </service>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\TestRoleCommand" class="App\Command\TestRoleCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\TestRoleCommand" class="App\Command\TestRoleCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\CategorieController" class="App\Controller\CategorieController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\CategorieController" class="App\Controller\CategorieController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\CategorieController" class="App\Controller\CategorieController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -10398,5 +10407,6 @@
     <service id=".service_locator.diNoEIK" alias=".service_locator.4wc4Ag1"/>
     <service id=".service_locator.JbeWkKi" alias=".service_locator.LenB0IS"/>
     <service id=".service_locator.b491maD" alias=".service_locator.QaaoWjx"/>
+    <service id="console.command.public_alias.App\Command\TestRoleCommand" alias="App\Command\TestRoleCommand" public="true"/>
   </services>
 </container>

@@ -13,6 +13,12 @@ function Connexion() {
     const [siret, setSiret] = useState('');
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
+    const [locataireFirstName, setLocataireFirstName] = useState('');
+    const [locataireLastName, setLocataireLastName] = useState('');
+    const [locataireEmail, setLocataireEmail] = useState('');
+    const [locatairePassword, setLocatairePassword] = useState('');
+    const [locatairePhone, setLocatairePhone] = useState('');
+    const [locataireError, setLocataireError] = useState('');
     const navigate = useNavigate();
 
     // Vérifier si l'utilisateur est déjà connecté
@@ -42,7 +48,7 @@ function Connexion() {
         e.preventDefault();
         setError('');
         try {
-            const data = await api.post('/login', { email, password });
+            const data = await api.post('/login_check', { email, password });
 
             // Stockage du token JWT
             localStorage.setItem('token', data.token);
@@ -125,6 +131,31 @@ function Connexion() {
         }
     };
 
+    const handleLocataireSignupSubmit = async (e) => {
+        e.preventDefault();
+        setLocataireError('');
+        try {
+            const data = await api.post('/register', {
+                prenom: locataireFirstName,
+                nom: locataireLastName,
+                email: locataireEmail,
+                password: locatairePassword,
+                telephone: locatairePhone,
+                type: 'locataire'
+            });
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify({
+                email: data.user.email,
+                firstName: data.user.firstName,
+                lastName: data.user.lastName,
+                type: data.user.type
+            }));
+            navigate('/');
+        } catch (err) {
+            setLocataireError(err.message);
+        }
+    };
+
     // Fonction pour se déconnecter
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -155,6 +186,12 @@ function Connexion() {
                             onClick={() => setActiveTab('pro')}
                         >
                             Inscription Pro
+                        </button>
+                        <button 
+                            className={`tab ${activeTab === 'locataire' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('locataire')}
+                        >
+                            Inscription Locataire
                         </button>
                     </div>
 
@@ -308,6 +345,64 @@ function Connexion() {
                                     required
                                 />
                             </div>
+                            <button type="submit" className="login-button">S'inscrire</button>
+                        </form>
+                    )}
+
+                    {activeTab === 'locataire' && (
+                        <form onSubmit={handleLocataireSignupSubmit}>
+                            <h2>Inscription Locataire</h2>
+                            <div className="form-group">
+                                <label htmlFor="locataireFirstName">Prénom</label>
+                                <input
+                                    type="text"
+                                    id="locataireFirstName"
+                                    value={locataireFirstName}
+                                    onChange={(e) => setLocataireFirstName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="locataireLastName">Nom</label>
+                                <input
+                                    type="text"
+                                    id="locataireLastName"
+                                    value={locataireLastName}
+                                    onChange={(e) => setLocataireLastName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="locataireEmail">Email</label>
+                                <input
+                                    type="email"
+                                    id="locataireEmail"
+                                    value={locataireEmail}
+                                    onChange={(e) => setLocataireEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="locatairePhone">Téléphone</label>
+                                <input
+                                    type="tel"
+                                    id="locatairePhone"
+                                    value={locatairePhone}
+                                    onChange={(e) => setLocatairePhone(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="locatairePassword">Mot de passe</label>
+                                <input
+                                    type="password"
+                                    id="locatairePassword"
+                                    value={locatairePassword}
+                                    onChange={(e) => setLocatairePassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            {locataireError && <div className="error-message">{locataireError}</div>}
                             <button type="submit" className="login-button">S'inscrire</button>
                         </form>
                     )}

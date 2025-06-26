@@ -13,6 +13,7 @@ import FormFilterAccueil from "./components/FormFilterAccueil";
 import IntermediaireProduit from "./page/IntermediaireProduit";
 import SearchButton from "./components/SearchButton";
 import Produits from "./page/Produits";
+import AdminPage from "./page/AdminPage";
 import "./App.css";
 
 // Import des images
@@ -73,6 +74,7 @@ function App() {
           element={<IntermediaireProduit />}
         />
         <Route path="/produits" element={<Produits />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route
           path="/"
           element={

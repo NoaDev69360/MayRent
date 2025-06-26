@@ -193,4 +193,9 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
+
+    public function getRawRoles(): array
+    {
+        return $this->roles;
+    }
 }
