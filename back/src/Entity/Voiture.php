@@ -34,6 +34,27 @@ class Voiture
     #[ORM\Column(length: 255)]
     private ?string $modele = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $carburant = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $boite = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $portes = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $places = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $volume_coffre = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +141,83 @@ class Voiture
     {
         $this->modele = $modele;
 
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getCarburant(): ?string
+    {
+        return $this->carburant;
+    }
+
+    public function setCarburant(?string $carburant): static
+    {
+        $this->carburant = $carburant;
+        return $this;
+    }
+
+    public function getBoite(): ?string
+    {
+        return $this->boite;
+    }
+
+    public function setBoite(?string $boite): static
+    {
+        $this->boite = $boite;
+        return $this;
+    }
+
+    public function getPortes(): ?int
+    {
+        return $this->portes;
+    }
+
+    public function setPortes(?int $portes): static
+    {
+        $this->portes = $portes;
+        return $this;
+    }
+
+    public function getPlaces(): ?int
+    {
+        return $this->places;
+    }
+
+    public function setPlaces(?int $places): static
+    {
+        $this->places = $places;
+        return $this;
+    }
+
+    public function getVolumeCoffre(): ?string
+    {
+        return $this->volume_coffre;
+    }
+
+    public function setVolumeCoffre(?string $volume_coffre): static
+    {
+        $this->volume_coffre = $volume_coffre;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
         return $this;
     }
 }

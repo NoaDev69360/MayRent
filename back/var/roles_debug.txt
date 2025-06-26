@@ -6,9 +6,9 @@
     "data": {
         "prenom": "rachid",
         "nom": "amoud",
-        "email": "rachid@amoud.fr",
-        "password": "adm",
-        "telephone": "0808080808",
+        "email": "rachid@amoud.com",
+        "password": "rachid",
+        "telephone": "0606060606",
         "siret": "305 492 183 00143",
         "type": "professionnel"
     }

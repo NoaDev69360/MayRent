@@ -24,7 +24,7 @@ class Location
     private ?float $prix_totale = null;
 
     #[ORM\ManyToOne]
-    private ?voiture $voiture = null;
+    private ?Voiture $voiture = null;
 
     public function getId(): ?int
     {
@@ -67,12 +67,12 @@ class Location
         return $this;
     }
 
-    public function getVoiture(): ?voiture
+    public function getVoiture(): ?Voiture
     {
         return $this->voiture;
     }
 
-    public function setVoiture(?voiture $voiture): static
+    public function setVoiture(?Voiture $voiture): static
     {
         $this->voiture = $voiture;
 

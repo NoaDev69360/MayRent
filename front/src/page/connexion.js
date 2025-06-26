@@ -52,8 +52,15 @@ function Connexion() {
 
             // Stockage du token JWT
             localStorage.setItem('token', data.token);
-            // Stockage de l'email utilisateur (optionnel)
-            localStorage.setItem('user', JSON.stringify({ email }));
+
+            // Récupérer les infos utilisateur (dont les rôles)
+            const meResponse = await fetch('http://localhost:8000/api/me', {
+                headers: {
+                    'Authorization': `Bearer ${data.token}`,
+                },
+            });
+            const me = await meResponse.json();
+            localStorage.setItem('user', JSON.stringify(me));
 
             // Redirection vers la page d'accueil
             navigate('/');

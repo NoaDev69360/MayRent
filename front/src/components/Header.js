@@ -36,6 +36,16 @@ function Header() {
         navigate('/connexion');
     };
 
+    function isAdmin() {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.roles) return false;
+            return user.roles.includes('ROLE_ADMIN');
+        } catch {
+            return false;
+        }
+    }
+
     return (
         <div className="header-container">
             {!isLoginPage && (
@@ -60,10 +70,12 @@ function Header() {
                             <Link to="/connexion" className="nav-button">Connexion</Link>
                         )}
                         <Link to="/inscription" className="nav-button">Inscription</Link>
-                        <Link to="/admin" className="nav-button account-button">
-                            Mon compte
-                            <img src={logoAdmin} alt="Admin" />
-                        </Link>
+                        {isLoggedIn && isAdmin() && (
+                            <a href="http://localhost:8000/admin" target="_blank" rel="noopener noreferrer" className="nav-button account-button">
+                                Mon compte
+                                <img src={logoAdmin} alt="Admin" />
+                            </a>
+                        )}
                     </nav>
                 </div>
             </header>

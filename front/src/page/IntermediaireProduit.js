@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import MapView from '../components/MapView';
@@ -9,36 +9,37 @@ function IntermediaireProduit() {
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 1000]);
     const [selectedTypes, setSelectedTypes] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [vehicles, setVehicles] = useState([]);
     const [isMapView, setIsMapView] = useState(false);
 
-    // Données de test pour les véhicules
-    const vehicles = [
-        {
-            id: 1,
-            name: "Renault Clio",
-            description: "Citadine économique",
-            price: 45,
-            location: { lat: 48.8566, lng: 2.3522 }
-        },
-        {
-            id: 2,
-            name: "Peugeot 3008",
-            description: "SUV confortable",
-            price: 65,
-            location: { lat: 48.8606, lng: 2.3376 }
-        },
-        // Ajoutez d'autres véhicules ici
-    ];
-
-    const brands = [
-        'MyRent', 'Renault', 'Peugeot', 'Citroën', 'Volkswagen', 'BMW', 
-        'Mercedes', 'Audi', 'Toyota', 'Ford', 'Fiat'
-    ];
-
-    const vehicleTypes = [
-        'MyRent', 'Citadine', 'Berline', 'SUV', '4x4', 'Sportive', 
-        'Utilitaire', 'Camion', 'Électrique'
-    ];
+    useEffect(() => {
+        fetch('http://localhost:8000/api/categories')
+            .then(res => res.json())
+            .then(data => {
+                setCategories(data);
+                console.log('Catégories récupérées:', data);
+            })
+            .catch((err) => {
+                setCategories([]);
+                console.error('Erreur lors de la récupération des catégories:', err);
+            });
+        fetch('http://localhost:8000/api/voitures')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setVehicles(data);
+                    console.log('Véhicules récupérés:', data);
+                } else {
+                    setVehicles([]);
+                    console.error('Erreur API véhicules:', data);
+                }
+            })
+            .catch((err) => {
+                setVehicles([]);
+                console.error('Erreur lors de la récupération des véhicules:', err);
+            });
+    }, []);
 
     const handleBrandChange = (brand) => {
         setSelectedBrands(prev => 
@@ -64,9 +65,13 @@ function IntermediaireProduit() {
         setIsMapView(!isMapView);
     };
 
-    const handleRentClick = () => {
-        navigate('/produits');
+    const handleRentClick = (vehicule) => {
+        navigate('/produits', { state: { vehicule } });
     };
+
+    // Pour supprimer les doublons côté front
+    const uniqueCategories = Array.from(new Set(categories.map(cat => cat.nom)))
+        .map(nom => categories.find(cat => cat.nom === nom));
 
     return (
         <div className="intermediaire-container">
@@ -74,23 +79,21 @@ function IntermediaireProduit() {
             <div className="intermediaire-content">
                 <div className="filters-section">
                     <h2>Filtres</h2>
-                    
                     <div className="filter-group">
-                        <h3>Marques</h3>
+                        <h3>Catégories</h3>
                         <div className="checkbox-group">
-                            {brands.map(brand => (
-                                <label key={brand} className="checkbox-label">
+                            {uniqueCategories.map(cat => (
+                                <label key={cat.id} className="checkbox-label">
                                     <input
                                         type="checkbox"
-                                        checked={selectedBrands.includes(brand)}
-                                        onChange={() => handleBrandChange(brand)}
+                                        checked={selectedTypes.includes(cat.nom)}
+                                        onChange={() => handleTypeChange(cat.nom)}
                                     />
-                                    {brand}
+                                    {cat.nom}
                                 </label>
                             ))}
                         </div>
                     </div>
-
                     <div className="filter-group">
                         <h3>Prix par jour</h3>
                         <div className="price-range">
@@ -108,22 +111,6 @@ function IntermediaireProduit() {
                             </div>
                         </div>
                     </div>
-
-                    <div className="filter-group">
-                        <h3>Type de véhicule</h3>
-                        <div className="checkbox-group">
-                            {vehicleTypes.map(type => (
-                                <label key={type} className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedTypes.includes(type)}
-                                        onChange={() => handleTypeChange(type)}
-                                    />
-                                    {type}
-                                </label>
-                            ))}
-                        </div>
-                    </div>
                 </div>
 
                 <div className="products-section">
@@ -135,10 +122,20 @@ function IntermediaireProduit() {
                         </button>
                     </div>
                     <div className="products-grid">
-                        {[...Array(18)].map((_, index) => (
-                            <div key={index} className="product-card">
-                                <div className="product-image"></div>
-                                <button className="rent-button" onClick={handleRentClick}>Louer</button>
+                        {vehicles.map((vehicule) => (
+                            <div key={vehicule.id} className="product-card">
+                                <div className="product-image">
+                                    {vehicule.image ? (
+                                        <img src={vehicule.image.startsWith('http') ? vehicule.image : `/MayRent/back/public/uploads/voitures/${vehicule.image}`} alt={vehicule.modele} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                                    ) : (
+                                        <div style={{width: '100%', height: '100%', background: '#eee'}}></div>
+                                    )}
+                                </div>
+                                <div style={{padding: '8px', textAlign: 'center'}}>
+                                    <strong>{vehicule.modele}</strong>
+                                    <div>{vehicule.prix_jour} € / jour</div>
+                                </div>
+                                <button className="rent-button" onClick={() => handleRentClick(vehicule)}>Louer</button>
                             </div>
                         ))}
                     </div>
