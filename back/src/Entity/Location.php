@@ -20,8 +20,8 @@ class Location
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_fin = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $prix_totale = null;
+    #[ORM\Column]
+    private ?float $prix_totale = null;
 
     #[ORM\ManyToOne]
     private ?voiture $voiture = null;
@@ -55,12 +55,12 @@ class Location
         return $this;
     }
 
-    public function getPrixTotale(): ?string
+    public function getPrixTotale(): ?float
     {
         return $this->prix_totale;
     }
 
-    public function setPrixTotale(string $prix_totale): static
+    public function setPrixTotale(float $prix_totale): static
     {
         $this->prix_totale = $prix_totale;
 

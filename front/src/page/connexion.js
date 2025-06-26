@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { api } from '../config/api';
+import { api } from '../services/api';
 import './connexion.css';
 import logo from '../img/logomyrentwhite.png';
 
@@ -48,18 +48,12 @@ function Connexion() {
         e.preventDefault();
         setError('');
         try {
-            const data = await api.post('/login_check', { email, password });
+            const data = await api.post('/login_check', { username: email, password });
 
             // Stockage du token JWT
             localStorage.setItem('token', data.token);
-            
-            // Stockage des informations utilisateur
-            localStorage.setItem('user', JSON.stringify({
-                email: data.user.email,
-                firstName: data.user.firstName,
-                lastName: data.user.lastName,
-                type: data.user.type
-            }));
+            // Stockage de l'email utilisateur (optionnel)
+            localStorage.setItem('user', JSON.stringify({ email }));
 
             // Redirection vers la page d'accueil
             navigate('/');

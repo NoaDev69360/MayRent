@@ -1,0 +1,6 @@
+b92e3a,127.0.0.1,OPTIONS,http://localhost:8000/api/login_check,1750940035,,200,request
+043d24,127.0.0.1,GET,http://localhost:8000/api/login_check,1750940035,17b560,400,request
+17b560,127.0.0.1,POST,http://localhost:8000/api/login_check,1750940035,,400,request
+1651a8,127.0.0.1,OPTIONS,http://localhost:8000/api/login_check,1750940240,,200,request
+d50295,127.0.0.1,POST,http://localhost:8000/api/login_check,1750940241,,200,request
+4a7fb1,127.0.0.1,POST,http://localhost:8000/api/login_check,1750940380,,200,request

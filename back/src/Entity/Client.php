@@ -58,6 +58,9 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'id_client')]
     private Collection $voitures;
 
+    #[ORM\Column(length: 40, nullable: true)]
+    private ?string $siret = null;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
@@ -197,5 +200,17 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRawRoles(): array
     {
         return $this->roles;
+    }
+
+    public function getSiret(): ?string
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(?string $siret): static
+    {
+        $this->siret = $siret;
+
+        return $this;
     }
 }

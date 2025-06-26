@@ -66,6 +66,9 @@ class InscriptionController extends AbstractController
                 $client->setRoles(['ROLE_PRO']);
                 $userType = 'professionnel';
                 $userRole = 'ROLE_PRO';
+                if (!empty($data['siret'])) {
+                    $client->setSiret($data['siret']);
+                }
             } elseif ($type === 'locataire') {
                 $client->setRoles(['ROLE_LOCATAIRE']);
                 $userType = 'locataire';

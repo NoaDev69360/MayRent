@@ -20,6 +20,7 @@ return [
     'app_categorie' => [[], ['_controller' => 'App\\Controller\\CategorieController::index'], [], [['text', '/categorie']], [], [], []],
     'api_register' => [[], ['_controller' => 'App\\Controller\\InscriptionController::register'], [], [['text', '/api/register']], [], [], []],
     'app_reservation' => [[], ['_controller' => 'App\\Controller\\ReservationController::index'], [], [['text', '/reservation']], [], [], []],
+    'lexik_jwt_login' => [[], [], [], [['text', '/api/login_check']], [], [], []],
     'App\Controller\CategorieController::index' => [[], ['_controller' => 'App\\Controller\\CategorieController::index'], [], [['text', '/categorie']], [], [], []],
     'App\Controller\InscriptionController::register' => [[], ['_controller' => 'App\\Controller\\InscriptionController::register'], [], [['text', '/api/register']], [], [], []],
     'App\Controller\ReservationController::index' => [[], ['_controller' => 'App\\Controller\\ReservationController::index'], [], [['text', '/reservation']], [], [], []],

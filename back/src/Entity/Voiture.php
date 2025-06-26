@@ -19,11 +19,11 @@ class Voiture
     #[ORM\Column(length: 255)]
     private ?string $couleur = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $puissance = null;
+    #[ORM\Column]
+    private ?int $puissance = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $prix_jour = null;
+    #[ORM\Column]
+    private ?float $prix_jour = null;
 
     #[ORM\ManyToOne(inversedBy: 'voitures')]
     private ?Client $id_client = null;
@@ -32,7 +32,7 @@ class Voiture
     private ?Categorie $id_categorie = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private ?string $modele = null;
 
     public function getId(): ?int
     {
@@ -63,24 +63,24 @@ class Voiture
         return $this;
     }
 
-    public function getPuissance(): ?string
+    public function getPuissance(): ?int
     {
         return $this->puissance;
     }
 
-    public function setPuissance(string $puissance): static
+    public function setPuissance(int $puissance): static
     {
         $this->puissance = $puissance;
 
         return $this;
     }
 
-    public function getPrixJour(): ?string
+    public function getPrixJour(): ?float
     {
         return $this->prix_jour;
     }
 
-    public function setPrixJour(string $prix_jour): static
+    public function setPrixJour(float $prix_jour): static
     {
         $this->prix_jour = $prix_jour;
 
@@ -111,14 +111,14 @@ class Voiture
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getModele(): ?string
     {
-        return $this->nom;
+        return $this->modele;
     }
 
-    public function setNom(string $nom): static
+    public function setModele(string $modele): static
     {
-        $this->nom = $nom;
+        $this->modele = $modele;
 
         return $this;
     }

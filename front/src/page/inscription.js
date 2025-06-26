@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../config/api';
+import { api } from '../services/api';
 
 function SignupForm() {
     const [activeTab, setActiveTab] = useState('particulier');

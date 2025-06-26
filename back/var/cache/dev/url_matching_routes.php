@@ -17,6 +17,7 @@ return [
         '/categorie' => [[['_route' => 'app_categorie', '_controller' => 'App\\Controller\\CategorieController::index'], null, null, null, false, false, null]],
         '/api/register' => [[['_route' => 'api_register', '_controller' => 'App\\Controller\\InscriptionController::register'], null, ['OPTIONS' => 0, 'POST' => 1], null, false, false, null]],
         '/reservation' => [[['_route' => 'app_reservation', '_controller' => 'App\\Controller\\ReservationController::index'], null, null, null, false, false, null]],
+        '/api/login_check' => [[['_route' => 'lexik_jwt_login'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
