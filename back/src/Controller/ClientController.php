@@ -18,6 +18,7 @@ class ClientController extends AbstractController
             return new JsonResponse(['error' => 'Not authenticated'], 401);
         }
         return new JsonResponse([
+            'id' => $user->getId(),
             'email' => $user->getEmail(),
             'roles' => $user->getRoles(),
             'prenom' => $user->getPrenom(),

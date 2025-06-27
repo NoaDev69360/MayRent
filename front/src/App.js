@@ -14,6 +14,7 @@ import IntermediaireProduit from "./page/IntermediaireProduit";
 import SearchButton from "./components/SearchButton";
 import Produits from "./page/Produits";
 import AdminPage from "./page/AdminPage";
+import ConfirmationReservation from './page/confirmationReservation';
 import "./App.css";
 
 // Import des images
@@ -75,6 +76,7 @@ function App() {
         />
         <Route path="/produits" element={<Produits />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/confirmation-reservation" element={<ConfirmationReservation />} />
         <Route
           path="/"
           element={

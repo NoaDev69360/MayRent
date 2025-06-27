@@ -47,6 +47,7 @@ class CategorieController extends AbstractController
             'volume_coffre' => $v->getVolumeCoffre(),
             'puissance' => $v->getPuissance(),
             'description' => $v->getDescription(),
+            'lieu_depart' => $v->getLieuDepart(),
         ], $voitures);
         return $this->json($data);
     }

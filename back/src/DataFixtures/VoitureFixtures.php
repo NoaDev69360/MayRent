@@ -48,6 +48,7 @@ class VoitureFixtures extends Fixture implements DependentFixtureInterface
             $voiture->setDescription($faker->sentence(15));
             // Image fictive (pas de téléchargement)
             $voiture->setImage('default.jpg');
+            $voiture->setLieuDepart($faker->city);
             $manager->persist($voiture);
         }
 

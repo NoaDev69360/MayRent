@@ -26,6 +26,7 @@ class VoitureCrudController extends AbstractCrudController
             TextField::new('modele'),
             NumberField::new('puissance'),
             NumberField::new('prix_jour'),
+            TextField::new('lieu_depart'),
             ImageField::new('image')
                 ->setBasePath('uploads/voitures')
                 ->setUploadDir('public/uploads/voitures')

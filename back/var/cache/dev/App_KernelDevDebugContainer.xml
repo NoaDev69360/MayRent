@@ -606,7 +606,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.wPuu3Nu"/>
+      <argument type="service" id=".service_locator.73qgjJQ"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -3656,7 +3656,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.wPuu3Nu"/>
+      <argument type="service" id=".service_locator.73qgjJQ"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -9703,7 +9703,25 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.LenB0IS" method="withContext"/>
     </service>
-    <service id=".service_locator.wPuu3Nu" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.TWxDQA4.App\Controller\ReservationController::reserver()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ReservationController::reserver()"/>
+      <argument>App\Controller\ReservationController::reserver()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TWxDQA4" method="withContext"/>
+    </service>
+    <service id=".service_locator.f9M7wQ5" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="locationRepository" type="service_closure" id="App\Repository\LocationRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.f9M7wQ5.App\Controller\ReservationController::getReservationsForVoiture()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ReservationController::getReservationsForVoiture()"/>
+      <argument>App\Controller\ReservationController::getReservationsForVoiture()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.f9M7wQ5" method="withContext"/>
+    </service>
+    <service id=".service_locator.73qgjJQ" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
@@ -9798,6 +9816,8 @@
         <argument key="App\Controller\CategorieController::apiCategories" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::apiCategories()"/>
         <argument key="App\Controller\CategorieController::apiVoitures" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::apiVoitures()"/>
         <argument key="App\Controller\InscriptionController::register" type="service_closure" id=".service_locator.LenB0IS.App\Controller\InscriptionController::register()"/>
+        <argument key="App\Controller\ReservationController::reserver" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\ReservationController::reserver()"/>
+        <argument key="App\Controller\ReservationController::getReservationsForVoiture" type="service_closure" id=".service_locator.f9M7wQ5.App\Controller\ReservationController::getReservationsForVoiture()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.4wc4Ag1.kernel::loadRoutes()"/>
         <argument key="App\Controller\Admin\CategorieCrudController:configureCrud" type="service_closure" id=".service_locator.GLGWHcU.App\Controller\Admin\CategorieCrudController::configureCrud()"/>
@@ -9888,6 +9908,8 @@
         <argument key="App\Controller\CategorieController:apiCategories" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::apiCategories()"/>
         <argument key="App\Controller\CategorieController:apiVoitures" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::apiVoitures()"/>
         <argument key="App\Controller\InscriptionController:register" type="service_closure" id=".service_locator.LenB0IS.App\Controller\InscriptionController::register()"/>
+        <argument key="App\Controller\ReservationController:reserver" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\ReservationController::reserver()"/>
+        <argument key="App\Controller\ReservationController:getReservationsForVoiture" type="service_closure" id=".service_locator.f9M7wQ5.App\Controller\ReservationController::getReservationsForVoiture()"/>
       </argument>
     </service>
     <service id=".service_locator.ea.H0ae" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -12335,7 +12357,7 @@
     <service id="EasyCorp\Bundle\EasyAdminBundle\Contracts\Orm\EntityPaginatorInterface" alias="EasyCorp\Bundle\EasyAdminBundle\Orm\EntityPaginator"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.pRu6x_4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.wPuu3Nu"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.73qgjJQ"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.BxSdgVt"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -12395,6 +12417,7 @@
     <service id=".service_locator.TK4HnZu" alias=".service_locator._1ARgjp"/>
     <service id=".service_locator.CK66ULR" alias=".service_locator.TWxDQA4"/>
     <service id=".service_locator.JbeWkKi" alias=".service_locator.LenB0IS"/>
+    <service id=".service_locator.1OAU5Ra" alias=".service_locator.f9M7wQ5"/>
     <service id=".service_locator.QbMWOW0" alias=".service_locator.Z7xq1n_"/>
     <service id=".service_locator.BCLXmaG" alias=".service_locator.mV6ntiS"/>
     <service id=".service_locator.b491maD" alias=".service_locator.QaaoWjx"/>

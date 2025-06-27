@@ -55,6 +55,9 @@ class Voiture
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lieu_depart = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -218,6 +221,17 @@ class Voiture
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getLieuDepart(): ?string
+    {
+        return $this->lieu_depart;
+    }
+
+    public function setLieuDepart(?string $lieu_depart): static
+    {
+        $this->lieu_depart = $lieu_depart;
         return $this;
     }
 }

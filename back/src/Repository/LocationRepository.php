@@ -40,4 +40,20 @@ class LocationRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * Retourne les réservations qui se chevauchent avec une période pour un véhicule donné
+     */
+    public function findOverlappingReservations($voitureId, $dateDebut, $dateFin)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.voiture = :voitureId')
+            ->andWhere('l.date_fin >= :dateDebut')
+            ->andWhere('l.date_debut <= :dateFin')
+            ->setParameter('voitureId', $voitureId)
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin)
+            ->getQuery()
+            ->getResult();
+    }
 }

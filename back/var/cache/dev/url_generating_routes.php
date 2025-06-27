@@ -55,7 +55,8 @@ return [
     'api_voitures' => [[], ['_controller' => 'App\\Controller\\CategorieController::apiVoitures'], [], [['text', '/api/voitures']], [], [], []],
     'api_me' => [[], ['_controller' => 'App\\Controller\\ClientController::me'], [], [['text', '/api/me']], [], [], []],
     'api_register' => [[], ['_controller' => 'App\\Controller\\InscriptionController::register'], [], [['text', '/api/register']], [], [], []],
-    'app_reservation' => [[], ['_controller' => 'App\\Controller\\ReservationController::index'], [], [['text', '/reservation']], [], [], []],
+    'api_reserver' => [[], ['_controller' => 'App\\Controller\\ReservationController::reserver'], [], [['text', '/api/reserver']], [], [], []],
+    'api_voiture_reservations' => [['id'], ['_controller' => 'App\\Controller\\ReservationController::getReservationsForVoiture'], [], [['text', '/reservations'], ['variable', '/', '[^/]++', 'id', true], ['text', '/api/voiture']], [], [], []],
     'lexik_jwt_login' => [[], [], [], [['text', '/api/login_check']], [], [], []],
     'App\Controller\Admin\DashboardController::index' => [[], ['_controller' => 'App\\Controller\\Admin\\DashboardController::index'], [], [['text', '/admin']], [], [], []],
     'App\Controller\CategorieController::index' => [[], ['_controller' => 'App\\Controller\\CategorieController::index'], [], [['text', '/categorie']], [], [], []],
@@ -63,5 +64,6 @@ return [
     'App\Controller\CategorieController::apiVoitures' => [[], ['_controller' => 'App\\Controller\\CategorieController::apiVoitures'], [], [['text', '/api/voitures']], [], [], []],
     'App\Controller\ClientController::me' => [[], ['_controller' => 'App\\Controller\\ClientController::me'], [], [['text', '/api/me']], [], [], []],
     'App\Controller\InscriptionController::register' => [[], ['_controller' => 'App\\Controller\\InscriptionController::register'], [], [['text', '/api/register']], [], [], []],
-    'App\Controller\ReservationController::index' => [[], ['_controller' => 'App\\Controller\\ReservationController::index'], [], [['text', '/reservation']], [], [], []],
+    'App\Controller\ReservationController::reserver' => [[], ['_controller' => 'App\\Controller\\ReservationController::reserver'], [], [['text', '/api/reserver']], [], [], []],
+    'App\Controller\ReservationController::getReservationsForVoiture' => [['id'], ['_controller' => 'App\\Controller\\ReservationController::getReservationsForVoiture'], [], [['text', '/reservations'], ['variable', '/', '[^/]++', 'id', true], ['text', '/api/voiture']], [], [], []],
 ];

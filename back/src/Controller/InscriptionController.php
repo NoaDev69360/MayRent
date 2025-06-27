@@ -118,6 +118,7 @@ class InscriptionController extends AbstractController
                 'status' => 'success',
                 'token' => $token,
                 'user' => [
+                    'id' => $client->getId(),
                     'email' => $client->getEmail(),
                     'firstName' => $client->getPrenom(),
                     'lastName' => $client->getNom(),
