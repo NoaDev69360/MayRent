@@ -15,7 +15,9 @@ import SearchButton from "./components/SearchButton";
 import Produits from "./page/Produits";
 import AdminPage from "./page/AdminPage";
 import ConfirmationReservation from './page/confirmationReservation';
+import MonCompte from './page/MonCompte';
 import "./App.css";
+import { api } from './services/api';
 
 // Import des images
 import img44 from "./img/img-4X42.png";
@@ -37,6 +39,8 @@ function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeFaq, setActiveFaq] = useState(null);
   const totalSlides = 3; // Nombre total de slides
+  const [favoriteCars, setFavoriteCars] = useState([]);
+  const [categoriesAccueil, setCategoriesAccueil] = useState([]);
 
   // Fonction pour le défilement automatique
   useEffect(() => {
@@ -45,6 +49,21 @@ function App() {
     }, 5000); // Change de slide toutes les 5 secondes
 
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    api.getCars().then(data => {
+      if (Array.isArray(data)) {
+        setFavoriteCars(data.slice(0, 3));
+      }
+    }).catch(() => setFavoriteCars([]));
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/categories')
+      .then(res => res.json())
+      .then(data => setCategoriesAccueil(data))
+      .catch(() => setCategoriesAccueil([]));
   }, []);
 
   // Fonctions pour la navigation manuelle
@@ -64,6 +83,17 @@ function App() {
     navigate("/intermediaire-produit");
   };
 
+  // Fonction pour choisir l'image selon le nom de la catégorie
+  const getCategoryImage = (nom) => {
+    if (nom.toLowerCase().includes('suv') || nom.toLowerCase().includes('4x4')) return img44;
+    if (nom.toLowerCase().includes('camion')) return imgCamion;
+    if (nom.toLowerCase().includes('citadine')) return imgCitadine;
+    if (nom.toLowerCase().includes('électrique')) return imgElectrique;
+    if (nom.toLowerCase().includes('sportive')) return imgSportive;
+    // Image par défaut
+    return imgCitadine;
+  };
+
   return (
     <div className="App">
       {!isLoginPage && <Header />}
@@ -77,6 +107,7 @@ function App() {
         <Route path="/produits" element={<Produits />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/confirmation-reservation" element={<ConfirmationReservation />} />
+        <Route path="/mon-compte" element={<MonCompte />} />
         <Route
           path="/"
           element={
@@ -95,26 +126,12 @@ function App() {
               <div className="car-types-section">
                 <h2>Explorez par type de voiture</h2>
                 <div className="car-types-grid">
-                  <div className="car-type-card">
-                    <img src={img44} alt="4x4" />
-                    <span>4x4 / SUV</span>
-                  </div>
-                  <div className="car-type-card">
-                    <img src={imgCamion} alt="Camion de chantier" />
-                    <span>Camion de chantier</span>
-                  </div>
-                  <div className="car-type-card">
-                    <img src={imgCitadine} alt="Citadine" />
-                    <span>Citadine</span>
-                  </div>
-                  <div className="car-type-card">
-                    <img src={imgElectrique} alt="Électrique" />
-                    <span>Électrique</span>
-                  </div>
-                  <div className="car-type-card">
-                    <img src={imgSportive} alt="Sportive" />
-                    <span>Sportive</span>
-                  </div>
+                  {categoriesAccueil.map(cat => (
+                    <div className="car-type-card" key={cat.id} onClick={() => navigate('/intermediaire-produit', { state: { filter: { categorie: cat.nom } } })}>
+                      <img src={getCategoryImage(cat.nom)} alt={cat.nom} />
+                      <span>{cat.nom}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="favorite-cars-section">
@@ -123,15 +140,22 @@ function App() {
                   Découvrez notre sélection de véhicules les plus populaires
                 </p>
                 <div className="favorite-cars-grid">
-                  <div className="favorite-car-card">
-                    <div className="placeholder-image"></div>
-                  </div>
-                  <div className="favorite-car-card">
-                    <div className="placeholder-image"></div>
-                  </div>
-                  <div className="favorite-car-card">
-                    <div className="placeholder-image"></div>
-                  </div>
+                  {favoriteCars.length > 0 ? favoriteCars.map((car) => (
+                    <div className="favorite-car-card" key={car.id} style={{background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px #eee', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12}}>
+                      <img src={car.image ? (car.image.startsWith('http') ? car.image : `/MayRent/back/public/uploads/voitures/${car.image}`) : ''} alt={car.modele} style={{width: '100%', height: 120, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0'}} />
+                      <div style={{fontWeight: 600, fontSize: 18, marginBottom: 4}}>{car.modele}</div>
+                      <div style={{color: '#007bff', fontWeight: 500, marginBottom: 8}}>{car.prix_jour} € / jour</div>
+                      <button className="search-button" style={{padding: '0.5rem 1.2rem', fontSize: 15}} onClick={() => navigate('/produits', { state: { vehicule: car } })}>
+                        Voir ce véhicule
+                      </button>
+                    </div>
+                  )) : (
+                    <>
+                      <div className="favorite-car-card"><div className="placeholder-image"></div></div>
+                      <div className="favorite-car-card"><div className="placeholder-image"></div></div>
+                      <div className="favorite-car-card"><div className="placeholder-image"></div></div>
+                    </>
+                  )}
                 </div>
                 <div className="favorite-cars-button">
                   <button onClick={handleSearchClick} className="search-button">

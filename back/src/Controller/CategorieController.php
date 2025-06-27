@@ -9,6 +9,7 @@ use App\Entity\Categorie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Voiture;
+use Symfony\Component\HttpFoundation\Request;
 
 class CategorieController extends AbstractController
 {
@@ -48,7 +49,104 @@ class CategorieController extends AbstractController
             'puissance' => $v->getPuissance(),
             'description' => $v->getDescription(),
             'lieu_depart' => $v->getLieuDepart(),
+            'categorie' => $v->getCategorie() ? [
+                'id' => $v->getCategorie()->getId(),
+                'nom' => $v->getCategorie()->getNom()
+            ] : null,
         ], $voitures);
         return $this->json($data);
+    }
+
+    #[Route('/api/voitures', name: 'api_voitures_create', methods: ['POST'])]
+    public function createVoiture(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifié'], 401);
+        }
+
+        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+            $data = json_decode($request->getContent(), true);
+        } else {
+            $data = $request->request->all();
+        }
+
+        $voiture = new Voiture();
+        $voiture->setModele($data['modele'] ?? '');
+        $voiture->setImmatriculation($data['immatriculation'] ?? '');
+        $voiture->setCouleur($data['couleur'] ?? '');
+        $voiture->setPuissance($data['puissance'] ?? 0);
+        $voiture->setPrixJour($data['prix_jour'] ?? 0);
+        $voiture->setCarburant($data['carburant'] ?? '');
+        $voiture->setBoite($data['boite'] ?? '');
+        $voiture->setPortes($data['portes'] ?? 0);
+        $voiture->setPlaces($data['places'] ?? 0);
+        $voiture->setVolumeCoffre($data['volume_coffre'] ?? '');
+        $voiture->setDescription($data['description'] ?? '');
+        $voiture->setLieuDepart($data['lieu_depart'] ?? '');
+        $voiture->setImage($data['image'] ?? 'default.jpg');
+
+        // Associer la catégorie
+        if (!empty($data['categorie_id'])) {
+            $categorie = $em->getRepository(Categorie::class)->find($data['categorie_id']);
+            if ($categorie) {
+                $voiture->setCategorie($categorie);
+            }
+        }
+
+        // Lier la voiture au client connecté
+        $voiture->setIdClient($user);
+
+        $em->persist($voiture);
+        $em->flush();
+
+        return $this->json(['success' => true, 'id' => $voiture->getId()]);
+    }
+
+    #[Route('/api/voitures/{id}', name: 'api_voitures_delete', methods: ['DELETE'])]
+    public function deleteVoiture($id, EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifié'], 401);
+        }
+        $voiture = $em->getRepository(Voiture::class)->find($id);
+        if (!$voiture) {
+            return $this->json(['error' => 'Véhicule introuvable'], 404);
+        }
+        if ($voiture->getIdClient()?->getId() !== $user->getId()) {
+            return $this->json(['error' => 'Accès refusé'], 403);
+        }
+        $em->remove($voiture);
+        $em->flush();
+        return $this->json(['success' => true]);
+    }
+
+    #[Route('/api/voitures/{id}', name: 'api_voitures_update', methods: ['PUT'])]
+    public function updateVoiture($id, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifié'], 401);
+        }
+        $voiture = $em->getRepository(Voiture::class)->find($id);
+        if (!$voiture) {
+            return $this->json(['error' => 'Véhicule introuvable'], 404);
+        }
+        if ($voiture->getIdClient()?->getId() !== $user->getId()) {
+            return $this->json(['error' => 'Accès refusé'], 403);
+        }
+        $isJson = $request->getContentTypeFormat() === 'json';
+        $data = $isJson ? json_decode($request->getContent(), true) : $request->request->all();
+        foreach ([
+            'modele', 'immatriculation', 'couleur', 'prix_jour', 'carburant', 'boite', 'portes', 'places', 'volume_coffre', 'puissance', 'description', 'lieu_depart'
+        ] as $field) {
+            if (isset($data[$field])) {
+                $setter = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
+                $voiture->$setter($data[$field]);
+            }
+        }
+        $em->flush();
+        return $this->json(['success' => true]);
     }
 }

@@ -62,7 +62,7 @@ export const api = {
   }),
 
   // Récupérer la liste des voitures
-  getCars: () => fetchApi('/cars'),
+  getCars: () => fetchApi('/voitures'),
   
   // Récupérer une voiture par ID
   getCarById: (id) => fetchApi(`/cars/${id}`),

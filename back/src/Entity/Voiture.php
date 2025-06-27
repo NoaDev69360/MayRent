@@ -29,7 +29,7 @@ class Voiture
     private ?Client $id_client = null;
 
     #[ORM\ManyToOne]
-    private ?Categorie $id_categorie = null;
+    private ?Categorie $categorie = null;
 
     #[ORM\Column(length: 255)]
     private ?string $modele = null;
@@ -123,15 +123,14 @@ class Voiture
         return $this;
     }
 
-    public function getIdCategorie(): ?Categorie
+    public function getCategorie(): ?Categorie
     {
-        return $this->id_categorie;
+        return $this->categorie;
     }
 
-    public function setIdCategorie(?Categorie $id_categorie): static
+    public function setCategorie(?Categorie $categorie): static
     {
-        $this->id_categorie = $id_categorie;
-
+        $this->categorie = $categorie;
         return $this;
     }
 

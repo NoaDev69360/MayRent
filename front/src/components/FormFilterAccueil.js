@@ -20,9 +20,7 @@ function FormFilterAccueil() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        // Vous pouvez stocker les données du formulaire dans localStorage si nécessaire
-        localStorage.setItem('searchData', JSON.stringify(formData));
-        navigate('/intermediaire-produit');
+        navigate('/intermediaire-produit', { state: { filter: formData } });
     };
 
     return (

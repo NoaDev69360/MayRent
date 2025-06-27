@@ -6,6 +6,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Voiture;
+use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ClientController extends AbstractController
 {
@@ -24,5 +27,28 @@ class ClientController extends AbstractController
             'prenom' => $user->getPrenom(),
             'nom' => $user->getNom(),
         ]);
+    }
+
+    #[Route('/api/mes-voitures', name: 'api_mes_voitures', methods: ['GET'])]
+    public function mesVoitures(EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifié'], 401);
+        }
+
+        $voitures = $em->getRepository(Voiture::class)->findBy(['id_client' => $user]);
+        $data = array_map(fn($v) => [
+            'id' => $v->getId(),
+            'modele' => $v->getModele(),
+            'image' => $v->getImage(),
+            'prix_jour' => $v->getPrixJour(),
+            'categorie' => $v->getCategorie() ? [
+                'id' => $v->getCategorie()->getId(),
+                'nom' => $v->getCategorie()->getNom()
+            ] : null,
+        ], $voitures);
+
+        return $this->json($data);
     }
 } 

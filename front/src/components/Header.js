@@ -63,16 +63,21 @@ function Header() {
                     <Link to="/" className="logo">
                         <img src={logo} alt="MayRent" />
                     </Link>
-                    <nav className="nav-links">
+                    <nav className="nav-links" style={{marginLeft: 'auto'}}>
                         {isLoggedIn ? (
-                            <button className="nav-button" onClick={handleLogout}>Déconnexion</button>
+                            <>
+                                <button className="nav-button" onClick={handleLogout}>Déconnexion</button>
+                                <button className="nav-button" onClick={() => navigate('/mon-compte')}>Mon compte</button>
+                            </>
                         ) : (
-                            <Link to="/connexion" className="nav-button">Connexion</Link>
+                            <>
+                                <Link to="/connexion" className="nav-button">Connexion</Link>
+                                <Link to="/inscription" className="nav-button">Inscription</Link>
+                            </>
                         )}
-                        <Link to="/inscription" className="nav-button">Inscription</Link>
                         {isLoggedIn && isAdmin() && (
                             <a href="http://localhost:8000/admin" target="_blank" rel="noopener noreferrer" className="nav-button account-button">
-                                Mon compte
+                                Admin
                                 <img src={logoAdmin} alt="Admin" />
                             </a>
                         )}

@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import MapView from '../components/MapView';
 import './IntermediaireProduit.css';
 
 function IntermediaireProduit() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 1000]);
     const [selectedTypes, setSelectedTypes] = useState([]);
     const [categories, setCategories] = useState([]);
     const [vehicles, setVehicles] = useState([]);
+    const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [isMapView, setIsMapView] = useState(false);
+    const [hasInitialFilter, setHasInitialFilter] = useState(false);
 
     useEffect(() => {
         fetch('http://localhost:8000/api/categories')
@@ -40,6 +43,46 @@ function IntermediaireProduit() {
                 console.error('Erreur lors de la récupération des véhicules:', err);
             });
     }, []);
+
+    useEffect(() => {
+        // Au chargement, si une catégorie est passée, on l'ajoute aux filtres
+        const filter = location.state?.filter;
+        if (filter?.categorie && !selectedTypes.includes(filter.categorie)) {
+            setSelectedTypes(prev => [...prev, filter.categorie]);
+        }
+    }, [location.state]);
+
+    useEffect(() => {
+        let result = [...vehicles];
+        const filter = location.state?.filter;
+
+        // LOGS DEBUG
+        console.log('--- DEBUG FILTRAGE ---');
+        console.log('Catégories des véhicules:', vehicles.map(v => v.categorie ? v.categorie.nom : null));
+        console.log('selectedTypes:', selectedTypes);
+        console.log('filter.categorie:', filter?.categorie);
+        // FIN LOGS DEBUG
+
+        // 1. Filtre par lieu de départ
+        if (filter?.departure) {
+            result = result.filter(v => v.lieu_depart && v.lieu_depart.toLowerCase().includes(filter.departure.toLowerCase()));
+        }
+
+        // 2. Filtre par catégorie
+        if (selectedTypes.length > 0) {
+            result = result.filter(v => v.categorie && selectedTypes.includes(v.categorie.nom));
+            if (hasInitialFilter) setHasInitialFilter(false); // On désactive le filtre initial après interaction
+        } else if (filter?.categorie && !hasInitialFilter) {
+            result = result.filter(v => v.categorie && v.categorie.nom === filter.categorie);
+            setHasInitialFilter(true);
+        }
+        // Sinon, aucun filtre de catégorie => tout afficher
+
+        // 3. Filtre par prix
+        result = result.filter(v => v.prix_jour <= priceRange[1]);
+
+        setFilteredVehicles(result);
+    }, [vehicles, selectedTypes, priceRange, location.state, hasInitialFilter]);
 
     const handleBrandChange = (brand) => {
         setSelectedBrands(prev => 
@@ -122,7 +165,7 @@ function IntermediaireProduit() {
                         </button>
                     </div>
                     <div className="products-grid">
-                        {vehicles.map((vehicule) => (
+                        {filteredVehicles.map((vehicule) => (
                             <div key={vehicule.id} className="product-card">
                                 <div className="product-image">
                                     {vehicule.image ? (

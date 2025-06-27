@@ -39,7 +39,7 @@ class VoitureFixtures extends Fixture implements DependentFixtureInterface
             $voiture->setCouleur($faker->safeColorName());
             $voiture->setPuissance($faker->numberBetween(75, 300));
             $voiture->setPrixJour($faker->randomFloat(2, 40, 200));
-            $voiture->setIdCategorie($categorie);
+            $voiture->setCategorie($categorie);
             $voiture->setCarburant($faker->randomElement(['Essence', 'Diesel', 'Électrique', 'Hybride']));
             $voiture->setBoite($faker->randomElement(['Manuelle', 'Automatique']));
             $voiture->setPortes($faker->numberBetween(3, 5));

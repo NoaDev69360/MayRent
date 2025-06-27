@@ -37,8 +37,12 @@ return [
         '/admin' => [[['_route' => 'admin', '_controller' => 'App\\Controller\\Admin\\DashboardController::index'], null, null, null, false, false, null]],
         '/categorie' => [[['_route' => 'app_categorie', '_controller' => 'App\\Controller\\CategorieController::index'], null, null, null, false, false, null]],
         '/api/categories' => [[['_route' => 'api_categories', '_controller' => 'App\\Controller\\CategorieController::apiCategories'], null, ['GET' => 0], null, false, false, null]],
-        '/api/voitures' => [[['_route' => 'api_voitures', '_controller' => 'App\\Controller\\CategorieController::apiVoitures'], null, ['GET' => 0], null, false, false, null]],
+        '/api/voitures' => [
+            [['_route' => 'api_voitures', '_controller' => 'App\\Controller\\CategorieController::apiVoitures'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'api_voitures_create', '_controller' => 'App\\Controller\\CategorieController::createVoiture'], null, ['POST' => 0], null, false, false, null],
+        ],
         '/api/me' => [[['_route' => 'api_me', '_controller' => 'App\\Controller\\ClientController::me'], null, ['GET' => 0], null, false, false, null]],
+        '/api/mes-voitures' => [[['_route' => 'api_mes_voitures', '_controller' => 'App\\Controller\\ClientController::mesVoitures'], null, ['GET' => 0], null, false, false, null]],
         '/api/register' => [[['_route' => 'api_register', '_controller' => 'App\\Controller\\InscriptionController::register'], null, ['OPTIONS' => 0, 'POST' => 1], null, false, false, null]],
         '/api/reserver' => [[['_route' => 'api_reserver', '_controller' => 'App\\Controller\\ReservationController::reserver'], null, ['POST' => 0], null, false, false, null]],
         '/api/login_check' => [[['_route' => 'lexik_jwt_login'], null, null, null, false, false, null]],
@@ -78,23 +82,28 @@ return [
                             .'|(*:249)'
                         .')'
                     .')'
-                    .'|pi/voiture/([^/]++)/reservations(*:291)'
+                    .'|pi/voiture(?'
+                        .'|s/([^/]++)(?'
+                            .'|(*:285)'
+                        .')'
+                        .'|/([^/]++)/reservations(*:316)'
+                    .')'
                 .')'
                 .'|/_(?'
-                    .'|error/(\\d+)(?:\\.([^/]++))?(*:331)'
-                    .'|wdt/([^/]++)(*:351)'
+                    .'|error/(\\d+)(?:\\.([^/]++))?(*:357)'
+                    .'|wdt/([^/]++)(*:377)'
                     .'|profiler/(?'
-                        .'|font/([^/\\.]++)\\.woff2(*:393)'
+                        .'|font/([^/\\.]++)\\.woff2(*:419)'
                         .'|([^/]++)(?'
                             .'|/(?'
-                                .'|search/results(*:430)'
-                                .'|router(*:444)'
+                                .'|search/results(*:456)'
+                                .'|router(*:470)'
                                 .'|exception(?'
-                                    .'|(*:464)'
-                                    .'|\\.css(*:477)'
+                                    .'|(*:490)'
+                                    .'|\\.css(*:503)'
                                 .')'
                             .')'
-                            .'|(*:487)'
+                            .'|(*:513)'
                         .')'
                     .')'
                 .')'
@@ -113,15 +122,19 @@ return [
         226 => [[['_route' => 'admin_voiture_edit', '_controller' => 'App\\Controller\\Admin\\VoitureCrudController::edit'], ['entityId'], ['GET' => 0, 'POST' => 1, 'PATCH' => 2], null, false, false, null]],
         240 => [[['_route' => 'admin_voiture_delete', '_controller' => 'App\\Controller\\Admin\\VoitureCrudController::delete'], ['entityId'], ['POST' => 0], null, false, false, null]],
         249 => [[['_route' => 'admin_voiture_detail', '_controller' => 'App\\Controller\\Admin\\VoitureCrudController::detail'], ['entityId'], ['GET' => 0], null, false, true, null]],
-        291 => [[['_route' => 'api_voiture_reservations', '_controller' => 'App\\Controller\\ReservationController::getReservationsForVoiture'], ['id'], ['GET' => 0], null, false, false, null]],
-        331 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
-        351 => [[['_route' => '_wdt', '_controller' => 'web_profiler.controller.profiler::toolbarAction'], ['token'], null, null, false, true, null]],
-        393 => [[['_route' => '_profiler_font', '_controller' => 'web_profiler.controller.profiler::fontAction'], ['fontName'], null, null, false, false, null]],
-        430 => [[['_route' => '_profiler_search_results', '_controller' => 'web_profiler.controller.profiler::searchResultsAction'], ['token'], null, null, false, false, null]],
-        444 => [[['_route' => '_profiler_router', '_controller' => 'web_profiler.controller.router::panelAction'], ['token'], null, null, false, false, null]],
-        464 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
-        477 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
-        487 => [
+        285 => [
+            [['_route' => 'api_voitures_delete', '_controller' => 'App\\Controller\\CategorieController::deleteVoiture'], ['id'], ['DELETE' => 0], null, false, true, null],
+            [['_route' => 'api_voitures_update', '_controller' => 'App\\Controller\\CategorieController::updateVoiture'], ['id'], ['PUT' => 0], null, false, true, null],
+        ],
+        316 => [[['_route' => 'api_voiture_reservations', '_controller' => 'App\\Controller\\ReservationController::getReservationsForVoiture'], ['id'], ['GET' => 0], null, false, false, null]],
+        357 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
+        377 => [[['_route' => '_wdt', '_controller' => 'web_profiler.controller.profiler::toolbarAction'], ['token'], null, null, false, true, null]],
+        419 => [[['_route' => '_profiler_font', '_controller' => 'web_profiler.controller.profiler::fontAction'], ['fontName'], null, null, false, false, null]],
+        456 => [[['_route' => '_profiler_search_results', '_controller' => 'web_profiler.controller.profiler::searchResultsAction'], ['token'], null, null, false, false, null]],
+        470 => [[['_route' => '_profiler_router', '_controller' => 'web_profiler.controller.router::panelAction'], ['token'], null, null, false, false, null]],
+        490 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
+        503 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
+        513 => [
             [['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

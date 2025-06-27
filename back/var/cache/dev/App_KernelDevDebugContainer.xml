@@ -250,10 +250,8 @@
     <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
     <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
     <parameter key="nelmio_cors.map" type="collection">
-      <parameter key="^/" type="collection">
-        <parameter key="allow_origin" type="collection">
-          <parameter>http://localhost:3000</parameter>
-        </parameter>
+      <parameter key="^/api/" type="collection">
+        <parameter key="allow_origin">true</parameter>
         <parameter key="allow_headers">true</parameter>
         <parameter key="allow_methods" type="collection">
           <parameter>POST</parameter>
@@ -267,9 +265,7 @@
       </parameter>
     </parameter>
     <parameter key="nelmio_cors.defaults" type="collection">
-      <parameter key="allow_origin" type="collection">
-        <parameter>http://localhost:3000</parameter>
-      </parameter>
+      <parameter key="allow_origin">true</parameter>
       <parameter key="allow_credentials">true</parameter>
       <parameter key="allow_headers">true</parameter>
       <parameter key="expose_headers" type="collection">
@@ -606,7 +602,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.73qgjJQ"/>
+      <argument type="service" id=".service_locator.afGuAuR"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -3656,7 +3652,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.73qgjJQ"/>
+      <argument type="service" id=".service_locator.afGuAuR"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -9688,6 +9684,30 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TWxDQA4" method="withContext"/>
     </service>
+    <service id=".service_locator.TWxDQA4.App\Controller\CategorieController::createVoiture()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\CategorieController::createVoiture()"/>
+      <argument>App\Controller\CategorieController::createVoiture()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TWxDQA4" method="withContext"/>
+    </service>
+    <service id=".service_locator.TWxDQA4.App\Controller\CategorieController::deleteVoiture()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\CategorieController::deleteVoiture()"/>
+      <argument>App\Controller\CategorieController::deleteVoiture()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TWxDQA4" method="withContext"/>
+    </service>
+    <service id=".service_locator.TWxDQA4.App\Controller\CategorieController::updateVoiture()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\CategorieController::updateVoiture()"/>
+      <argument>App\Controller\CategorieController::updateVoiture()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TWxDQA4" method="withContext"/>
+    </service>
+    <service id=".service_locator.TWxDQA4.App\Controller\ClientController::mesVoitures()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ClientController::mesVoitures()"/>
+      <argument>App\Controller\ClientController::mesVoitures()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TWxDQA4" method="withContext"/>
+    </service>
     <service id=".service_locator.LenB0IS" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9721,7 +9741,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.f9M7wQ5" method="withContext"/>
     </service>
-    <service id=".service_locator.73qgjJQ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.afGuAuR" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
@@ -9815,6 +9835,10 @@
         <argument key="App\Controller\Admin\VoitureCrudController::configureResponseParameters" type="service_closure" id=".service_locator.OgOMxLk.App\Controller\Admin\VoitureCrudController::configureResponseParameters()"/>
         <argument key="App\Controller\CategorieController::apiCategories" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::apiCategories()"/>
         <argument key="App\Controller\CategorieController::apiVoitures" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::apiVoitures()"/>
+        <argument key="App\Controller\CategorieController::createVoiture" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::createVoiture()"/>
+        <argument key="App\Controller\CategorieController::deleteVoiture" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::deleteVoiture()"/>
+        <argument key="App\Controller\CategorieController::updateVoiture" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::updateVoiture()"/>
+        <argument key="App\Controller\ClientController::mesVoitures" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\ClientController::mesVoitures()"/>
         <argument key="App\Controller\InscriptionController::register" type="service_closure" id=".service_locator.LenB0IS.App\Controller\InscriptionController::register()"/>
         <argument key="App\Controller\ReservationController::reserver" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\ReservationController::reserver()"/>
         <argument key="App\Controller\ReservationController::getReservationsForVoiture" type="service_closure" id=".service_locator.f9M7wQ5.App\Controller\ReservationController::getReservationsForVoiture()"/>
@@ -9907,6 +9931,10 @@
         <argument key="App\Controller\Admin\VoitureCrudController:configureResponseParameters" type="service_closure" id=".service_locator.OgOMxLk.App\Controller\Admin\VoitureCrudController::configureResponseParameters()"/>
         <argument key="App\Controller\CategorieController:apiCategories" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::apiCategories()"/>
         <argument key="App\Controller\CategorieController:apiVoitures" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::apiVoitures()"/>
+        <argument key="App\Controller\CategorieController:createVoiture" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::createVoiture()"/>
+        <argument key="App\Controller\CategorieController:deleteVoiture" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::deleteVoiture()"/>
+        <argument key="App\Controller\CategorieController:updateVoiture" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\CategorieController::updateVoiture()"/>
+        <argument key="App\Controller\ClientController:mesVoitures" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\ClientController::mesVoitures()"/>
         <argument key="App\Controller\InscriptionController:register" type="service_closure" id=".service_locator.LenB0IS.App\Controller\InscriptionController::register()"/>
         <argument key="App\Controller\ReservationController:reserver" type="service_closure" id=".service_locator.TWxDQA4.App\Controller\ReservationController::reserver()"/>
         <argument key="App\Controller\ReservationController:getReservationsForVoiture" type="service_closure" id=".service_locator.f9M7wQ5.App\Controller\ReservationController::getReservationsForVoiture()"/>
@@ -12357,7 +12385,7 @@
     <service id="EasyCorp\Bundle\EasyAdminBundle\Contracts\Orm\EntityPaginatorInterface" alias="EasyCorp\Bundle\EasyAdminBundle\Orm\EntityPaginator"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.pRu6x_4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.73qgjJQ"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.afGuAuR"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.BxSdgVt"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
