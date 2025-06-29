@@ -52,4 +52,21 @@ class ClientController extends AbstractController
 
         return $this->json($data);
     }
+
+    #[Route('/api/delete-account', name: 'api_delete_account', methods: ['DELETE'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function deleteAccount(EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifié'], 401);
+        }
+        try {
+            $em->remove($user);
+            $em->flush();
+            return $this->json(['success' => true, 'message' => 'Compte supprimé avec succès.']);
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'message' => 'Erreur lors de la suppression du compte.'], 500);
+        }
+    }
 } 

@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\LocationRepository;
 
 class ReservationController extends AbstractController
@@ -18,11 +19,11 @@ class ReservationController extends AbstractController
     public function reserver(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        if (!isset($data['voiture_id'], $data['client_id'], $data['date_debut'], $data['date_fin'], $data['prix_totale'])) {
+        if (!isset($data['voiture_id'], $data['date_debut'], $data['date_fin'], $data['prix_totale'])) {
             return $this->json(['success' => false, 'message' => 'Données manquantes'], 400);
         }
         $voiture = $em->getRepository(Voiture::class)->find($data['voiture_id']);
-        $client = $em->getRepository(Client::class)->find($data['client_id']);
+        $client = $this->getUser();
         if (!$voiture || !$client) {
             return $this->json(['success' => false, 'message' => 'Véhicule ou client introuvable'], 404);
         }
@@ -63,5 +64,37 @@ class ReservationController extends AbstractController
             ];
         }, $locations);
         return $this->json($periods);
+    }
+
+    #[Route('/api/mes-locations', name: 'api_mes_locations', methods: ['GET'])]
+    #[Route('/MayRent/back/public/api/mes-locations', name: 'api_mes_locations_alt', methods: ['GET'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function mesLocations(EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Non authentifié'], 401);
+        }
+        $locations = $em->getRepository(Location::class)->findBy(['client' => $user]);
+        $data = array_map(function($loc) {
+            return [
+                'id' => $loc->getId(),
+                'date_debut' => $loc->getDateDebut()->format('Y-m-d'),
+                'date_fin' => $loc->getDateFin()->format('Y-m-d'),
+                'prix_totale' => $loc->getPrixTotale(),
+                'voiture' => [
+                    'id' => $loc->getVoiture()->getId(),
+                    'modele' => $loc->getVoiture()->getModele(),
+                    'image_url' => $loc->getVoiture()->getImageUrl(),
+                ],
+            ];
+        }, $locations);
+        return $this->json($data);
+    }
+
+    #[Route('/api/test-mes-locations', name: 'api_test_mes_locations', methods: ['GET'])]
+    public function testMesLocations(): JsonResponse
+    {
+        return $this->json(['message' => 'Test endpoint accessible', 'status' => 'ok']);
     }
 }

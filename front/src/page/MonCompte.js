@@ -27,6 +27,7 @@ function MonCompte() {
     const [editId, setEditId] = useState(null);
     const [editForm, setEditForm] = useState({});
     const [categories, setCategories] = useState([]);
+    const [mesLocations, setMesLocations] = useState([]);
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -51,6 +52,16 @@ function MonCompte() {
         api.get('/categories')
             .then(data => setCategories(data))
             .catch(() => setCategories([]));
+    }, []);
+
+    useEffect(() => {
+        // Récupère les locations du client connecté
+        const token = localStorage.getItem('token');
+        if (token) {
+            api.get('/mes-locations')
+            .then(data => setMesLocations(Array.isArray(data) ? data : []))
+            .catch(() => setMesLocations([]));
+        }
     }, []);
 
     const handleChange = (e) => {
@@ -84,9 +95,15 @@ function MonCompte() {
         formData.append('proprietaire_id', user.id);
         if (form.categorie_id) formData.append('categorie_id', form.categorie_id);
         try {
+            // Utilisation de api.post pour garantir l'envoi du token
+            const token = localStorage.getItem('token');
             const response = await fetch(`${API_URL}/voitures`, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    'Authorization': token ? `Bearer ${token}` : undefined
+                    // Ne pas mettre 'Content-Type' pour FormData, il sera géré automatiquement
+                }
             });
             if (response.ok) {
                 setMessage('Véhicule ajouté avec succès !');
@@ -147,6 +164,24 @@ function MonCompte() {
             fetchMesVoitures();
         } catch (err) {
             setMessage('Erreur serveur');
+        }
+    };
+
+    // Handler pour la suppression du compte
+    const handleDeleteAccount = async () => {
+        if (!window.confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return;
+        try {
+            const response = await api.delete('/delete-account');
+            if (response.success) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                alert('Votre compte a été supprimé.');
+                navigate('/connexion');
+            } else {
+                alert(response.message || 'Erreur lors de la suppression du compte.');
+            }
+        } catch (err) {
+            alert('Erreur serveur lors de la suppression du compte.');
         }
     };
 
@@ -243,6 +278,28 @@ function MonCompte() {
                         {message && <p style={{textAlign: 'center', color: message.includes('succès') ? 'green' : 'red'}}>{message}</p>}
                     </div>
                 )}
+                <div style={{marginTop: 40}}>
+                    <h2>Mes locations</h2>
+                    {mesLocations.length === 0 ? (
+                        <p style={{color: '#888'}}>Aucune location enregistrée.</p>
+                    ) : (
+                        <div style={{display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center'}}>
+                            {mesLocations.map(loc => (
+                                <div key={loc.id} style={{background: '#f9f9f9', borderRadius: 8, boxShadow: '0 1px 4px #eee', padding: 16, minWidth: 220, maxWidth: 250, textAlign: 'center'}}>
+                                    <img src={loc.voiture.image_url} alt={loc.voiture.modele} style={{width: '100%', height: 100, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0'}} />
+                                    <div style={{fontWeight: 600, fontSize: 16, marginBottom: 4}}>{loc.voiture.modele}</div>
+                                    <div style={{color: '#007bff', fontWeight: 500, marginBottom: 4}}>{loc.prix_totale} €</div>
+                                    <div style={{color: '#666', fontSize: 14}}>Du {loc.date_debut} au {loc.date_fin}</div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div style={{ marginTop: 40, textAlign: 'center' }}>
+                    <button onClick={handleDeleteAccount} style={{ background: '#b30000', color: '#fff', padding: '12px 32px', borderRadius: 8, border: 'none', fontWeight: 600, fontSize: 18, cursor: 'pointer' }}>
+                        Supprimer mon compte
+                    </button>
+                </div>
             </div>
         </div>
     );

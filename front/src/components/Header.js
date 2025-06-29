@@ -81,7 +81,7 @@ function Header() {
                             </>
                         )}
                         {isLoggedIn && isAdmin() && (
-                            <a href="http://localhost:8000/admin" target="_blank" rel="noopener noreferrer" className="nav-button account-button">
+                            <a href="http://localhost:8080/admin" target="_blank" rel="noopener noreferrer" className="nav-button account-button">
                                 Admin
                                 <img src={logoAdmin} alt="Admin" />
                             </a>

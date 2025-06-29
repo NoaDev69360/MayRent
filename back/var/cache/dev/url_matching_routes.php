@@ -43,8 +43,12 @@ return [
         ],
         '/api/me' => [[['_route' => 'api_me', '_controller' => 'App\\Controller\\ClientController::me'], null, ['GET' => 0], null, false, false, null]],
         '/api/mes-voitures' => [[['_route' => 'api_mes_voitures', '_controller' => 'App\\Controller\\ClientController::mesVoitures'], null, ['GET' => 0], null, false, false, null]],
+        '/api/delete-account' => [[['_route' => 'api_delete_account', '_controller' => 'App\\Controller\\ClientController::deleteAccount'], null, ['DELETE' => 0], null, false, false, null]],
         '/api/register' => [[['_route' => 'api_register', '_controller' => 'App\\Controller\\InscriptionController::register'], null, ['OPTIONS' => 0, 'POST' => 1], null, false, false, null]],
         '/api/reserver' => [[['_route' => 'api_reserver', '_controller' => 'App\\Controller\\ReservationController::reserver'], null, ['POST' => 0], null, false, false, null]],
+        '/api/mes-locations' => [[['_route' => 'api_mes_locations', '_controller' => 'App\\Controller\\ReservationController::mesLocations'], null, ['GET' => 0], null, false, false, null]],
+        '/MayRent/back/public/api/mes-locations' => [[['_route' => 'api_mes_locations_alt', '_controller' => 'App\\Controller\\ReservationController::mesLocations'], null, ['GET' => 0], null, false, false, null]],
+        '/api/test-mes-locations' => [[['_route' => 'api_test_mes_locations', '_controller' => 'App\\Controller\\ReservationController::testMesLocations'], null, ['GET' => 0], null, false, false, null]],
         '/api/login_check' => [[['_route' => 'lexik_jwt_login'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
