@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import MapView from '../components/MapView';
 import './IntermediaireProduit.css';
+import { api } from '../services/api';
 
 function IntermediaireProduit() {
     const navigate = useNavigate();
@@ -17,8 +18,7 @@ function IntermediaireProduit() {
     const [hasInitialFilter, setHasInitialFilter] = useState(false);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/categories')
-            .then(res => res.json())
+        api.get('/categories')
             .then(data => {
                 setCategories(data);
                 console.log('Catégories récupérées:', data);
@@ -27,8 +27,7 @@ function IntermediaireProduit() {
                 setCategories([]);
                 console.error('Erreur lors de la récupération des catégories:', err);
             });
-        fetch('http://localhost:8000/api/voitures')
-            .then(res => res.json())
+        api.get('/voitures')
             .then(data => {
                 if (Array.isArray(data)) {
                     setVehicles(data);
@@ -78,11 +77,8 @@ function IntermediaireProduit() {
         }
         // Sinon, aucun filtre de catégorie => tout afficher
 
-        // 3. Filtre par prix
-        result = result.filter(v => v.prix_jour <= priceRange[1]);
-
         setFilteredVehicles(result);
-    }, [vehicles, selectedTypes, priceRange, location.state, hasInitialFilter]);
+    }, [vehicles, selectedTypes, location.state, hasInitialFilter]);
 
     const handleBrandChange = (brand) => {
         setSelectedBrands(prev => 
@@ -137,23 +133,6 @@ function IntermediaireProduit() {
                             ))}
                         </div>
                     </div>
-                    <div className="filter-group">
-                        <h3>Prix par jour</h3>
-                        <div className="price-range">
-                            <input
-                                type="range"
-                                min="0"
-                                max="1000"
-                                value={priceRange[1]}
-                                onChange={handlePriceChange}
-                                className="price-slider"
-                            />
-                            <div className="price-values">
-                                <span>0€</span>
-                                <span>{priceRange[1]}€</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div className="products-section">
@@ -168,8 +147,8 @@ function IntermediaireProduit() {
                         {filteredVehicles.map((vehicule) => (
                             <div key={vehicule.id} className="product-card">
                                 <div className="product-image">
-                                    {vehicule.image ? (
-                                        <img src={vehicule.image.startsWith('http') ? vehicule.image : `/MayRent/back/public/uploads/voitures/${vehicule.image}`} alt={vehicule.modele} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                                    {vehicule && (vehicule.image_url || vehicule.image) ? (
+                                        <img src={vehicule.image_url ? vehicule.image_url : (vehicule.image && vehicule.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${vehicule.image}` : '/MayRent/back/public/uploads/voitures/default.jpg')} alt={vehicule.modele} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                                     ) : (
                                         <div style={{width: '100%', height: '100%', background: '#eee'}}></div>
                                     )}

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Voiture;
 use Symfony\Component\Security\Core\Security;
@@ -42,6 +42,7 @@ class ClientController extends AbstractController
             'id' => $v->getId(),
             'modele' => $v->getModele(),
             'image' => $v->getImage(),
+            'image_url' => $v->getImageUrl(),
             'prix_jour' => $v->getPrixJour(),
             'categorie' => $v->getCategorie() ? [
                 'id' => $v->getCategorie()->getId(),

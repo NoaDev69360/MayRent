@@ -1,13 +1,14 @@
 {
     "roles": [
-        "ROLE_PARTICULIER"
+        "ROLE_LOCATAIRE"
     ],
-    "type": null,
+    "type": "locataire",
     "data": {
-        "prenom": "abde",
-        "nom": "abde",
-        "email": "abde@abde.com",
-        "password": "abde",
-        "telephone": "0606060606"
+        "prenom": "noa",
+        "nom": "Aliguechi",
+        "email": "noa@noa.fr",
+        "password": "noa",
+        "telephone": "0606060606",
+        "type": "locataire"
     }
 }

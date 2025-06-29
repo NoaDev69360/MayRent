@@ -1,16 +1,27 @@
 // Configuration de base pour les requêtes API
-const API_URL = 'http://localhost:8000/api'; // URL de base de l'API Symfony
+export const API_URL = 'http://localhost:8080/api'; // URL de base de l'API Symfony
 
 // Fonction utilitaire pour les requêtes fetch
 const fetchApi = async (endpoint, options = {}) => {
   try {
+    // Récupérer le token d'authentification
+    const token = localStorage.getItem('token');
+    
+    // Préparer les headers
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      ...options.headers,
+    };
+
+    // Ajouter le token d'authentification si disponible
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        ...options.headers,
-      },  
+      headers,
       mode: 'cors',
       credentials: 'omit', // On n'envoie pas de cookies pour l'instant
     });
@@ -48,7 +59,7 @@ export const api = {
   }),
 
   // Méthode GET générique
-  get: (endpoint) => fetchApi(endpoint),
+  get: (endpoint, options = {}) => fetchApi(endpoint, options),
 
   // Méthode PUT générique
   put: (endpoint, data) => fetchApi(endpoint, {

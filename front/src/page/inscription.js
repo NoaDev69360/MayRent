@@ -60,6 +60,7 @@ function SignupForm() {
         const formErrors = validate();
         if (Object.keys(formErrors).length === 0) {
             setIsLoading(true);
+            setErrors({});
             try {
                 let payload = {
                     prenom: formData.prenom,
@@ -76,18 +77,22 @@ function SignupForm() {
                 } else {
                     payload.type = 'particulier';
                 }
-                await api.post('/register', payload);
-                setSubmitted(true);
-                setFormData({
-                    prenom: '',
-                    nom: '',
-                    email: '',
-                    password: '',
-                    confirmPassword: '',
-                    telephone: '',
-                    siret: '',
-                });
-                setErrors({});
+                const response = await api.post('/register', payload);
+                if (response && (response.status === 'success' || response.message)) {
+                    setSubmitted(true);
+                    setFormData({
+                        prenom: '',
+                        nom: '',
+                        email: '',
+                        password: '',
+                        confirmPassword: '',
+                        telephone: '',
+                        siret: '',
+                    });
+                    setErrors({});
+                } else {
+                    setErrors({ apiError: response && response.message ? response.message : 'Erreur inconnue lors de l\'inscription' });
+                }
             } catch (error) {
                 setErrors({ 
                     apiError: error.message || 'Une erreur est survenue lors de l\'inscription'

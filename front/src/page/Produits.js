@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Header from '../components/Header';
 import './Produits.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { api } from '../services/api';
 
 function Produits() {
     const [startDate, setStartDate] = useState(null);
@@ -22,8 +23,7 @@ function Produits() {
 
     useEffect(() => {
         if (vehicule && vehicule.id) {
-            fetch(`http://localhost:8000/api/voiture/${vehicule.id}/reservations`)
-                .then(res => res.json())
+            api.get(`/voiture/${vehicule.id}/reservations`)
                 .then(data => {
                     if (Array.isArray(data)) {
                         setReservedPeriods(data);
@@ -97,29 +97,13 @@ function Produits() {
             alert('Vous devez être connecté pour réserver.');
             return;
         }
-        const response = await fetch('http://localhost:8000/api/reserver', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                voiture_id: vehicule.id,
-                client_id: clientId,
-                date_debut: startDate.toISOString().slice(0, 10),
-                date_fin: endDate.toISOString().slice(0, 10),
-                prix_totale: prixTotale
-            })
+        const data = await api.post('/reserver', {
+            voiture_id: vehicule.id,
+            client_id: clientId,
+            date_debut: startDate.toISOString().slice(0, 10),
+            date_fin: endDate.toISOString().slice(0, 10),
+            prix_totale: prixTotale
         });
-        const contentType = response.headers.get('content-type');
-        let data;
-        if (contentType && contentType.includes('application/json')) {
-            data = await response.json();
-        } else {
-            const text = await response.text();
-            alert('Erreur serveur : ' + text);
-            return;
-        }
         if (data.success) {
             let client = null;
             try {
@@ -137,7 +121,7 @@ function Produits() {
                 }
             });
         } else {
-            alert(data.message);
+            alert(data.message || 'Erreur lors de la réservation');
         }
     };
 
@@ -148,8 +132,8 @@ function Produits() {
                 <div className="car-details">
                     <div className="car-main-section">
                         <div className="car-image-container">
-                            {vehicule && vehicule.image ? (
-                                <img src={vehicule.image.startsWith('http') ? vehicule.image : `/MayRent/back/public/uploads/voitures/${vehicule.image}`} alt={vehicule.modele} className="car-image" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
+                            {vehicule && (vehicule.image_url || vehicule.image) ? (
+                                <img src={vehicule.image_url ? vehicule.image_url : (vehicule.image && vehicule.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${vehicule.image}` : '/MayRent/back/public/uploads/voitures/default.jpg')} alt={vehicule.modele} className="car-image" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
                             ) : (
                                 <div className="car-image"></div>
                             )}

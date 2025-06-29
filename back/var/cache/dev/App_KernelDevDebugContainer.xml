@@ -251,7 +251,9 @@
     <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
     <parameter key="nelmio_cors.map" type="collection">
       <parameter key="^/api/" type="collection">
-        <parameter key="allow_origin">true</parameter>
+        <parameter key="allow_origin" type="collection">
+          <parameter>http://localhost:3000</parameter>
+        </parameter>
         <parameter key="allow_headers">true</parameter>
         <parameter key="allow_methods" type="collection">
           <parameter>POST</parameter>
@@ -265,7 +267,9 @@
       </parameter>
     </parameter>
     <parameter key="nelmio_cors.defaults" type="collection">
-      <parameter key="allow_origin">true</parameter>
+      <parameter key="allow_origin" type="collection">
+        <parameter>http://localhost:3000</parameter>
+      </parameter>
       <parameter key="allow_credentials">true</parameter>
       <parameter key="allow_headers">true</parameter>
       <parameter key="expose_headers" type="collection">
@@ -283,7 +287,7 @@
       <parameter key="max_age">3600</parameter>
       <parameter key="hosts" type="collection"/>
       <parameter key="origin_regex">false</parameter>
-      <parameter key="forced_allow_origin_value">null</parameter>
+      <parameter key="forced_allow_origin_value">http://localhost:3000</parameter>
       <parameter key="skip_same_as_origin">true</parameter>
     </parameter>
     <parameter key="nelmio_cors.cors_listener.class">Nelmio\CorsBundle\EventListener\CorsListener</parameter>
@@ -7343,6 +7347,10 @@
         <argument type="service" id=".security.request_matcher.3qgJVJN"/>
       </argument>
     </service>
+    <service id="security.listener.api.user_provider" class="Symfony\Component\Security\Http\EventListener\UserProviderListener">
+      <tag name="kernel.event_listener" dispatcher="debug.security.event_dispatcher.api" event="Symfony\Component\Security\Http\Event\CheckPassportEvent" priority="2048" method="checkPassport"/>
+      <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
+    </service>
     <service id="security.user_checker.chain.api" class="Symfony\Component\Security\Core\User\ChainUserChecker">
       <argument type="tagged_iterator" tag="security.user_checker.api"/>
     </service>
@@ -8617,6 +8625,14 @@
       <argument type="service" id="debug.stopwatch"/>
       <argument type="service" id="monolog.logger.event" on-invalid="null"/>
       <argument type="service" id="request_stack" on-invalid="null"/>
+      <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="security.listener.api.user_provider"/>
+          <argument>checkPassport</argument>
+        </argument>
+        <argument>2048</argument>
+      </call>
       <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
         <argument type="collection">

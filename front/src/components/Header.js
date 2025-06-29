@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
 import logo from '../img/logomyrentwhite.png';
 import logoAdmin from '../img/logo-admin.png';
-import headerImage from '../img/image-header.png';
+import headerImage from '../img/ami-voiture.jpg';
 import headerImageCamion from '../img/image-header-camion.png';
 
 function Header() {
@@ -12,6 +12,7 @@ function Header() {
     const location = useLocation();
     const navigate = useNavigate();
     const isLoginPage = location.pathname === '/connexion';
+    const isHome = location.pathname === '/';
 
     useEffect(() => {
         const handleScroll = () => {
@@ -47,8 +48,8 @@ function Header() {
     }
 
     return (
-        <div className="header-container">
-            {!isLoginPage && (
+        <div className={`header-container${isHome ? ' home-header' : ''}`}>
+            {isHome ? (
                 <>
                     <div className="header-image">
                         <img src={headerImage} alt="Header" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -57,6 +58,10 @@ function Header() {
                         <img src={headerImageCamion} alt="Header Camion" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                 </>
+            ) : (
+                <div className="header-image">
+                    <img src={headerImage} alt="Header" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
             )}
             <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
                 <div className="header-content">

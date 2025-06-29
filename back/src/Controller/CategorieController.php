@@ -40,6 +40,7 @@ class CategorieController extends AbstractController
             'id' => $v->getId(),
             'modele' => $v->getModele(),
             'image' => $v->getImage(),
+            'image_url' => $v->getImageUrl(),
             'prix_jour' => $v->getPrixJour(),
             'carburant' => $v->getCarburant(),
             'boite' => $v->getBoite(),

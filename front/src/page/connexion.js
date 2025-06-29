@@ -26,17 +26,9 @@ function Connexion() {
         const token = localStorage.getItem('token');
         if (token) {
             // Vérifier si le token est valide
-            fetch('http://localhost:3000/api/auth/verify', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
+            api.get('/me')
             .then(response => {
-                if (response.ok) {
-                    navigate('/');
-                } else {
-                    localStorage.removeItem('token');
-                }
+                navigate('/');
             })
             .catch(() => {
                 localStorage.removeItem('token');
@@ -49,17 +41,18 @@ function Connexion() {
         setError('');
         try {
             const data = await api.post('/login_check', { username: email, password });
+            console.log('Réponse /login_check:', data);
+            if (!data.token) {
+                setError('Aucun token JWT reçu.');
+                return;
+            }
 
             // Stockage du token JWT
             localStorage.setItem('token', data.token);
 
             // Récupérer les infos utilisateur (dont les rôles)
-            const meResponse = await fetch('http://localhost:8000/api/me', {
-                headers: {
-                    'Authorization': `Bearer ${data.token}`,
-                },
-            });
-            const me = await meResponse.json();
+            console.log('Token utilisé pour /me:', data.token);
+            const me = await api.get('/me');
             localStorage.setItem('user', JSON.stringify(me));
 
             // Redirection vers la page d'accueil
@@ -80,19 +73,10 @@ function Connexion() {
                 password: password,
                 telephone: phone
             });
-
-            // Stockage du token JWT après inscription réussie
             localStorage.setItem('token', data.token);
-            
-            // Stockage des informations utilisateur
-            localStorage.setItem('user', JSON.stringify({
-                email: data.user.email,
-                firstName: data.user.firstName,
-                lastName: data.user.lastName,
-                type: data.user.type
-            }));
-
-            // Redirection vers la page d'accueil
+            // Récupère le user complet (avec id) après inscription
+            const me = await api.get('/me');
+            localStorage.setItem('user', JSON.stringify(me));
             navigate('/');
         } catch (err) {
             setError(err.message);
@@ -112,20 +96,9 @@ function Connexion() {
                 siret: siret,
                 type: 'professionnel'
             });
-
-            // Stockage du token JWT après inscription réussie
             localStorage.setItem('token', data.token);
-            
-            // Stockage des informations utilisateur
-            localStorage.setItem('user', JSON.stringify({
-                email: data.user.email,
-                firstName: data.user.firstName,
-                lastName: data.user.lastName,
-                type: data.user.type,
-                siret: data.user.siret
-            }));
-
-            // Redirection vers la page d'accueil
+            const me = await api.get('/me');
+            localStorage.setItem('user', JSON.stringify(me));
             navigate('/');
         } catch (err) {
             setError(err.message);
@@ -145,12 +118,8 @@ function Connexion() {
                 type: 'locataire'
             });
             localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify({
-                email: data.user.email,
-                firstName: data.user.firstName,
-                lastName: data.user.lastName,
-                type: data.user.type
-            }));
+            const me = await api.get('/me');
+            localStorage.setItem('user', JSON.stringify(me));
             navigate('/');
         } catch (err) {
             setLocataireError(err.message);
@@ -162,6 +131,7 @@ function Connexion() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         navigate('/connexion');
+        window.location.reload(); // Force un reload pour vider tout l'état React
     };
 
     return (

@@ -776,4 +776,8 @@
 
 .favorite-cars-button .search-button:hover {
     background-color: #0056b3;
+}
+
+.with-header-space {
+    margin-top: 100px;
 } 

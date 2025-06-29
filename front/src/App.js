@@ -18,6 +18,7 @@ import ConfirmationReservation from './page/confirmationReservation';
 import MonCompte from './page/MonCompte';
 import "./App.css";
 import { api } from './services/api';
+import Footer from './components/Footer';
 
 // Import des images
 import img44 from "./img/img-4X42.png";
@@ -36,6 +37,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const isLoginPage = location.pathname === "/connexion";
+  const isHome = location.pathname === "/";
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeFaq, setActiveFaq] = useState(null);
   const totalSlides = 3; // Nombre total de slides
@@ -60,8 +62,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/categories')
-      .then(res => res.json())
+    api.get('/categories')
       .then(data => setCategoriesAccueil(data))
       .catch(() => setCategoriesAccueil([]));
   }, []);
@@ -95,7 +96,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App${!isHome ? ' with-header-space' : ''}`}>
       {!isLoginPage && <Header />}
       <Routes>
         <Route path="/connexion" element={<Connexion />} />
@@ -142,7 +143,7 @@ function App() {
                 <div className="favorite-cars-grid">
                   {favoriteCars.length > 0 ? favoriteCars.map((car) => (
                     <div className="favorite-car-card" key={car.id} style={{background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px #eee', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12}}>
-                      <img src={car.image ? (car.image.startsWith('http') ? car.image : `/MayRent/back/public/uploads/voitures/${car.image}`) : ''} alt={car.modele} style={{width: '100%', height: 120, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0'}} />
+                      <img src={car.image_url ? car.image_url : (car.image && car.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${car.image}` : '/MayRent/back/public/uploads/voitures/default.jpg')} alt={car.modele} style={{width: '100%', height: 120, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0'}} />
                       <div style={{fontWeight: 600, fontSize: 18, marginBottom: 4}}>{car.modele}</div>
                       <div style={{color: '#007bff', fontWeight: 500, marginBottom: 8}}>{car.prix_jour} € / jour</div>
                       <button className="search-button" style={{padding: '0.5rem 1.2rem', fontSize: 15}} onClick={() => navigate('/produits', { state: { vehicule: car } })}>
@@ -234,59 +235,6 @@ function App() {
                   <div className="about-image">
                     <img src={amiVoiture} alt="Ami voiture" />
                   </div>
-                </div>
-              </div>
-              <div className="brands-section">
-                <h2>Recherchez par marque</h2>
-                <div className="carousel-container">
-                  <button className="carousel-arrow prev" onClick={prevSlide}>
-                    ❮
-                  </button>
-                  <div className="carousel">
-                    <div
-                      className="carousel-track"
-                      style={{
-                        transform: `translateX(-${currentSlide * 100}%)`,
-                      }}
-                    >
-                      <div className="carousel-slide">
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                      </div>
-                      <div className="carousel-slide">
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                      </div>
-                      <div className="carousel-slide">
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                        <div className="brand-card">
-                          <div className="placeholder-image"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button className="carousel-arrow next" onClick={nextSlide}>
-                    ❯
-                  </button>
                 </div>
               </div>
               <div className="partners-section">
@@ -609,73 +557,11 @@ function App() {
                 </div>
               </div>
               <main className="main-content"></main>
-              <footer className="footer">
-                <div className="footer-container">
-                  <div className="footer-section">
-                    <h4>À propos</h4>
-                    <ul>
-                      <li>
-                        <a href="/about">Qui sommes-nous</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="footer-section">
-                    <h4>Services</h4>
-                    <ul>
-                      <li>
-                        <a href="/rent">Location de voiture</a>
-                      </li>
-                      <li>
-                        <a href="/insurance">Assurance</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="footer-logo">
-                    <img src={logo} alt="MayRent Logo" />
-                  </div>
-                  <div className="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                      <li>
-                        <a href="/help">Centre d'aide</a>
-                      </li>
-                      <li>
-                        <a href="/contact">Contact</a>
-                      </li>
-                      <li>
-                        <a href="/faq">FAQ</a>
-                      </li>
-                      <li>
-                        <a href="/safety">Sécurité</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="footer-section">
-                    <h4>Légal</h4>
-                    <ul>
-                      <li>
-                        <a href="/terms">Conditions générales</a>
-                      </li>
-                      <li>
-                        <a href="/privacy">Politique de confidentialité</a>
-                      </li>
-                      <li>
-                        <a href="/cookies">Politique des cookies</a>
-                      </li>
-                      <li>
-                        <a href="/legal">Mentions légales</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="footer-bottom">
-                  <p>&copy; 2024 MayRent. Tous droits réservés.</p>
-                </div>
-              </footer>
             </>
           }
         />
       </Routes>
+      {!isLoginPage && <Footer />}
     </div>
   );
 }

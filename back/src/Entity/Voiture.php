@@ -58,6 +58,9 @@ class Voiture
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lieu_depart = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image_url = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -231,6 +234,17 @@ class Voiture
     public function setLieuDepart(?string $lieu_depart): static
     {
         $this->lieu_depart = $lieu_depart;
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->image_url;
+    }
+
+    public function setImageUrl(?string $image_url): static
+    {
+        $this->image_url = $image_url;
         return $this;
     }
 }
