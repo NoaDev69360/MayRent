@@ -104,7 +104,6 @@ function MonCompte() {
                 body: formData,
                 headers: {
                     'Authorization': token ? `Bearer ${token}` : undefined
-                    // Ne pas mettre 'Content-Type' pour FormData, il sera géré automatiquement
                 }
             });
             if (response.ok) {
