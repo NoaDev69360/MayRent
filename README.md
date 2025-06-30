@@ -1,5 +1,4 @@
-MayRent - Guide de Déploiement
-Prérequis système
+✅ Prérequis système
 
     OS : Ubuntu 20.04+ recommandé
 
@@ -17,14 +16,12 @@ Prérequis système
 
         Accès SSH configuré (clé privée pour l'automatisation)
 
-Installation manuelle
+🛠️ Installation manuelle
 1. Connexion au serveur
-bash
 
 ssh -i <votre-cle.pem> ubuntu@<ip-de-votre-serveur>
 
 2. Récupération du code
-bash
 
 git clone https://github.com/<utilisateur>/<repo>.git mayrent
 cd mayrent
@@ -40,7 +37,6 @@ cd mayrent
     Autres variables d'environnement
 
 4. Lancement des conteneurs
-bash
 
 docker compose build
 docker compose up -d
@@ -51,23 +47,22 @@ Accédez à l'application :
 http://<ip-de-votre-serveur>
 
 Pour consulter les logs :
-bash
 
 docker compose logs
 
-Déploiement automatisé (CI/CD)
+🔄 Déploiement automatisé (CI/CD)
 
 Le projet utilise GitHub Actions pour déployer automatiquement à chaque push sur main.
-Configuration requise
+🔐 Configuration requise
 
 Ajoutez ces secrets dans GitHub :
 
     AWS_EC2_SSH_KEY : Clé privée SSH (format PEM)
 
-    AWS_EC2_HOST : IP/DNS du serveur
+    AWS_EC2_HOST : IP ou DNS du serveur
 
-Workflow exemple
-yaml
+
+📄 Exemple de workflow
 
 jobs:
   deploy-aws:
@@ -87,19 +82,16 @@ jobs:
             docker compose up -d
           '
 
-Maintenance
+🔧 Maintenance
 Consulter les logs
-bash
 
 docker compose logs
 
 Redémarrer un service
-bash
 
 docker compose restart <nom-du-service>
 
-Mise à jour de l'application
-bash
+Mettre à jour l'application
 
 git pull origin main
 docker compose build
