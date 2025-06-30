@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Voiture;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CategorieController extends AbstractController
 {
@@ -66,10 +67,38 @@ class CategorieController extends AbstractController
             return $this->json(['error' => 'Non authentifié'], 401);
         }
 
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-        } else {
-            $data = $request->request->all();
+        $isJson = 0 === strpos($request->headers->get('Content-Type'), 'application/json');
+        $data = $isJson ? json_decode($request->getContent(), true) : $request->request->all();
+        $imageUrl = $data['image'] ?? null;
+
+        // Si l'image est un fichier uploadé, on l'envoie sur Imgur
+        /** @var UploadedFile|null $uploadedFile */
+        $uploadedFile = $request->files->get('image');
+        if ($uploadedFile instanceof UploadedFile) {
+            $imgurClientId = 'e1f5c2368bbdb59';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image');
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Client-ID ' . $imgurClientId
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, [
+                'image' => new \CURLFile($uploadedFile->getPathname(), $uploadedFile->getMimeType(), $uploadedFile->getClientOriginalName())
+            ]);
+            $result = curl_exec($ch);
+            $err = curl_error($ch);
+            curl_close($ch);
+            if ($err) {
+                return $this->json(['error' => 'Erreur upload Imgur', 'details' => $err], 500);
+            }
+            $imgurData = json_decode($result, true);
+            if (!empty($imgurData['success']) && !empty($imgurData['data']['link'])) {
+                $imageUrl = $imgurData['data']['link'];
+                $imageUrlImgur = $imgurData['data']['link'];
+            } else {
+                return $this->json(['error' => 'Erreur upload Imgur', 'details' => $imgurData], 500);
+            }
         }
 
         $voiture = new Voiture();
@@ -85,7 +114,12 @@ class CategorieController extends AbstractController
         $voiture->setVolumeCoffre($data['volume_coffre'] ?? '');
         $voiture->setDescription($data['description'] ?? '');
         $voiture->setLieuDepart($data['lieu_depart'] ?? '');
-        $voiture->setImage($data['image'] ?? 'default.jpg');
+        $voiture->setImage($imageUrl ?: 'default.jpg');
+        if (isset($imageUrlImgur)) {
+            $voiture->setImageUrl($imageUrlImgur);
+        } else {
+            $voiture->setImageUrl(null);
+        }
 
         // Associer la catégorie
         if (!empty($data['categorie_id'])) {

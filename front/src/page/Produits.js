@@ -133,7 +133,12 @@ function Produits() {
                     <div className="car-main-section">
                         <div className="car-image-container">
                             {vehicule && (vehicule.image_url || vehicule.image) ? (
-                                <img src={vehicule.image_url ? vehicule.image_url : (vehicule.image && vehicule.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${vehicule.image}` : '/MayRent/back/public/uploads/voitures/default.jpg')} alt={vehicule.modele} className="car-image" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
+                                <img
+                                    src={vehicule.image_url ? vehicule.image_url : (vehicule.image && vehicule.image.startsWith('http') ? vehicule.image : (vehicule.image && vehicule.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${vehicule.image}` : '/MayRent/back/public/uploads/voitures/default.jpg'))}
+                                    alt={vehicule.modele}
+                                    className="car-image"
+                                    style={{objectFit: 'cover', width: '100%', height: '100%'}}
+                                />
                             ) : (
                                 <div className="car-image"></div>
                             )}

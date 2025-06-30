@@ -97,4 +97,50 @@ class ReservationController extends AbstractController
     {
         return $this->json(['message' => 'Test endpoint accessible', 'status' => 'ok']);
     }
+
+    #[Route('/api/locations/{id}', name: 'api_location_delete', methods: ['DELETE'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function deleteLocation($id, EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        $location = $em->getRepository(Location::class)->find($id);
+        if (!$location) {
+            return $this->json(['error' => 'Réservation introuvable'], 404);
+        }
+        if ($location->getClient()?->getId() !== $user->getId()) {
+            return $this->json(['error' => 'Accès refusé'], 403);
+        }
+        $em->remove($location);
+        $em->flush();
+        return $this->json(['success' => true, 'message' => 'Réservation supprimée']);
+    }
+
+    #[Route('/api/locations/{id}', name: 'api_location_update', methods: ['PUT'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function updateLocation($id, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $user = $this->getUser();
+        $location = $em->getRepository(Location::class)->find($id);
+        if (!$location) {
+            return $this->json(['error' => 'Réservation introuvable'], 404);
+        }
+        if ($location->getClient()?->getId() !== $user->getId()) {
+            return $this->json(['error' => 'Accès refusé'], 403);
+        }
+        $data = json_decode($request->getContent(), true);
+        if (isset($data['date_debut'])) {
+            $location->setDateDebut(new \DateTime($data['date_debut']));
+        }
+        if (isset($data['date_fin'])) {
+            $location->setDateFin(new \DateTime($data['date_fin']));
+        }
+        if (isset($data['prix_totale'])) {
+            $location->setPrixTotale($data['prix_totale']);
+        }
+        if (isset($data['lieu_depart'])) {
+            $location->setLieuDepart($data['lieu_depart']);
+        }
+        $em->flush();
+        return $this->json(['success' => true, 'message' => 'Réservation modifiée']);
+    }
 }

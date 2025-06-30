@@ -148,7 +148,11 @@ function IntermediaireProduit() {
                             <div key={vehicule.id} className="product-card">
                                 <div className="product-image">
                                     {vehicule && (vehicule.image_url || vehicule.image) ? (
-                                        <img src={vehicule.image_url ? vehicule.image_url : (vehicule.image && vehicule.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${vehicule.image}` : '/MayRent/back/public/uploads/voitures/default.jpg')} alt={vehicule.modele} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                                        <img
+                                            src={vehicule.image_url ? vehicule.image_url : (vehicule.image && vehicule.image.startsWith('http') ? vehicule.image : (vehicule.image && vehicule.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${vehicule.image}` : '/MayRent/back/public/uploads/voitures/default.jpg'))}
+                                            alt={vehicule.modele}
+                                            style={{width: '100%', height: '100%', objectFit: 'cover'}}
+                                        />
                                     ) : (
                                         <div style={{width: '100%', height: '100%', background: '#eee'}}></div>
                                     )}

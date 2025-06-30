@@ -65,6 +65,8 @@ return [
     'api_mes_locations' => [[], ['_controller' => 'App\\Controller\\ReservationController::mesLocations'], [], [['text', '/api/mes-locations']], [], [], []],
     'api_mes_locations_alt' => [[], ['_controller' => 'App\\Controller\\ReservationController::mesLocations'], [], [['text', '/MayRent/back/public/api/mes-locations']], [], [], []],
     'api_test_mes_locations' => [[], ['_controller' => 'App\\Controller\\ReservationController::testMesLocations'], [], [['text', '/api/test-mes-locations']], [], [], []],
+    'api_location_delete' => [['id'], ['_controller' => 'App\\Controller\\ReservationController::deleteLocation'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/api/locations']], [], [], []],
+    'api_location_update' => [['id'], ['_controller' => 'App\\Controller\\ReservationController::updateLocation'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/api/locations']], [], [], []],
     'lexik_jwt_login' => [[], [], [], [['text', '/api/login_check']], [], [], []],
     'App\Controller\Admin\DashboardController::index' => [[], ['_controller' => 'App\\Controller\\Admin\\DashboardController::index'], [], [['text', '/admin']], [], [], []],
     'App\Controller\CategorieController::index' => [[], ['_controller' => 'App\\Controller\\CategorieController::index'], [], [['text', '/categorie']], [], [], []],
@@ -80,4 +82,6 @@ return [
     'App\Controller\ReservationController::reserver' => [[], ['_controller' => 'App\\Controller\\ReservationController::reserver'], [], [['text', '/api/reserver']], [], [], []],
     'App\Controller\ReservationController::getReservationsForVoiture' => [['id'], ['_controller' => 'App\\Controller\\ReservationController::getReservationsForVoiture'], [], [['text', '/reservations'], ['variable', '/', '[^/]++', 'id', true], ['text', '/api/voiture']], [], [], []],
     'App\Controller\ReservationController::testMesLocations' => [[], ['_controller' => 'App\\Controller\\ReservationController::testMesLocations'], [], [['text', '/api/test-mes-locations']], [], [], []],
+    'App\Controller\ReservationController::deleteLocation' => [['id'], ['_controller' => 'App\\Controller\\ReservationController::deleteLocation'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/api/locations']], [], [], []],
+    'App\Controller\ReservationController::updateLocation' => [['id'], ['_controller' => 'App\\Controller\\ReservationController::updateLocation'], [], [['variable', '/', '[^/]++', 'id', true], ['text', '/api/locations']], [], [], []],
 ];

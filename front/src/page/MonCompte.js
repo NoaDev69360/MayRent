@@ -28,6 +28,9 @@ function MonCompte() {
     const [editForm, setEditForm] = useState({});
     const [categories, setCategories] = useState([]);
     const [mesLocations, setMesLocations] = useState([]);
+    const [editLocationId, setEditLocationId] = useState(null);
+    const [editLocationForm, setEditLocationForm] = useState({});
+    const IMGUR_CLIENT_ID = "e1f5c2368bbdb59";
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -95,7 +98,6 @@ function MonCompte() {
         formData.append('proprietaire_id', user.id);
         if (form.categorie_id) formData.append('categorie_id', form.categorie_id);
         try {
-            // Utilisation de api.post pour garantir l'envoi du token
             const token = localStorage.getItem('token');
             const response = await fetch(`${API_URL}/voitures`, {
                 method: 'POST',
@@ -182,6 +184,53 @@ function MonCompte() {
             }
         } catch (err) {
             alert('Erreur serveur lors de la suppression du compte.');
+        }
+    };
+
+    const fetchMesLocations = () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            api.get('/mes-locations')
+            .then(data => setMesLocations(Array.isArray(data) ? data : []))
+            .catch(() => setMesLocations([]));
+        }
+    };
+
+    const handleDeleteLocation = async (id) => {
+        if (!window.confirm('Supprimer cette location ?')) return;
+        try {
+            await api.delete(`/locations/${id}`);
+            setMessage('Location supprimée !');
+            fetchMesLocations();
+        } catch (err) {
+            setMessage('Erreur serveur');
+        }
+    };
+
+    const handleEditLocation = (loc) => {
+        setEditLocationId(loc.id);
+        setEditLocationForm({
+            date_debut: loc.date_debut,
+            date_fin: loc.date_fin,
+            lieu_depart: loc.lieu_depart || '',
+        });
+    };
+
+    const handleEditLocationChange = (e) => {
+        const { name, value } = e.target;
+        setEditLocationForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleEditLocationSubmit = async (id) => {
+        try {
+            await api.put(`/locations/${id}`, editLocationForm, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+            setMessage('Location modifiée !');
+            setEditLocationId(null);
+            fetchMesLocations();
+        } catch (err) {
+            setMessage('Erreur serveur');
         }
     };
 
@@ -273,6 +322,9 @@ function MonCompte() {
                             </select>
                             <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} required style={{width: '100%', minHeight: 60, resize: 'vertical'}} />
                             <input type="file" name="image" accept="image/*" onChange={handleChange} required style={{marginTop: 8}} />
+                            {form.image && (
+                                <img src={URL.createObjectURL(form.image)} alt="Aperçu" style={{width: '100%', maxHeight: 120, objectFit: 'contain', marginTop: 8}} />
+                            )}
                             <button type="submit" className="nav-button" style={{alignSelf: 'center', marginTop: 16}}>Ajouter le véhicule</button>
                         </form>
                         {message && <p style={{textAlign: 'center', color: message.includes('succès') ? 'green' : 'red'}}>{message}</p>}
@@ -290,6 +342,20 @@ function MonCompte() {
                                     <div style={{fontWeight: 600, fontSize: 16, marginBottom: 4}}>{loc.voiture.modele}</div>
                                     <div style={{color: '#007bff', fontWeight: 500, marginBottom: 4}}>{loc.prix_totale} €</div>
                                     <div style={{color: '#666', fontSize: 14}}>Du {loc.date_debut} au {loc.date_fin}</div>
+                                    {editLocationId === loc.id ? (
+                                        <div style={{marginTop: 8}}>
+                                            <input type="date" name="date_debut" value={editLocationForm.date_debut || ''} onChange={handleEditLocationChange} style={{marginBottom: 4, width: '100%'}} />
+                                            <input type="date" name="date_fin" value={editLocationForm.date_fin || ''} onChange={handleEditLocationChange} style={{marginBottom: 4, width: '100%'}} />
+                                            <input type="text" name="lieu_depart" value={editLocationForm.lieu_depart || ''} onChange={handleEditLocationChange} placeholder="Lieu de départ" style={{marginBottom: 4, width: '100%'}} />
+                                            <button onClick={() => handleEditLocationSubmit(loc.id)} className="nav-button" style={{marginRight: 8}}>Valider</button>
+                                            <button onClick={() => setEditLocationId(null)} className="nav-button">Annuler</button>
+                                        </div>
+                                    ) : (
+                                        <div style={{marginTop: 8, display: 'flex', gap: 8, justifyContent: 'center'}}>
+                                            <button onClick={() => handleEditLocation(loc)} className="nav-button">Modifier</button>
+                                            <button onClick={() => handleDeleteLocation(loc.id)} className="nav-button" style={{background: '#b30000'}}>Supprimer</button>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

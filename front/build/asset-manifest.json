@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.835244e4.css",
-    "main.js": "/static/js/main.cd0de807.js",
+    "main.js": "/static/js/main.298129fe.js",
     "static/js/453.80efc53e.chunk.js": "/static/js/453.80efc53e.chunk.js",
     "static/media/ami-voiture.jpg": "/static/media/ami-voiture.e21956e77173d16063a4.jpg",
     "static/media/image-header-camion.png": "/static/media/image-header-camion.d3f3eef56b698e095fd4.png",
@@ -13,11 +13,11 @@
     "static/media/logomyrentwhite.png": "/static/media/logomyrentwhite.82b579fe48fc186ab4f2.png",
     "index.html": "/index.html",
     "main.835244e4.css.map": "/static/css/main.835244e4.css.map",
-    "main.cd0de807.js.map": "/static/js/main.cd0de807.js.map",
+    "main.298129fe.js.map": "/static/js/main.298129fe.js.map",
     "453.80efc53e.chunk.js.map": "/static/js/453.80efc53e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.835244e4.css",
-    "static/js/main.cd0de807.js"
+    "static/js/main.298129fe.js"
   ]
 }

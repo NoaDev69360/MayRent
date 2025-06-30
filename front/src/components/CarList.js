@@ -29,6 +29,11 @@ function CarList() {
       <div className="car-grid">
         {cars?.map((car) => (
           <div key={car.id} className="car-card">
+            <img
+              src={car.image_url ? car.image_url : (car.image && car.image !== 'default.jpg' ? car.image : '/MayRent/back/public/uploads/voitures/default.jpg')}
+              alt={car.modele || car.name}
+              style={{ width: '100%', height: 100, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0' }}
+            />
             <h3>{car.name}</h3>
             <p>{car.description}</p>
             <button

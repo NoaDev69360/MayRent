@@ -86,28 +86,33 @@ return [
                             .'|(*:249)'
                         .')'
                     .')'
-                    .'|pi/voiture(?'
-                        .'|s/([^/]++)(?'
-                            .'|(*:285)'
+                    .'|pi/(?'
+                        .'|voiture(?'
+                            .'|s/([^/]++)(?'
+                                .'|(*:288)'
+                            .')'
+                            .'|/([^/]++)/reservations(*:319)'
                         .')'
-                        .'|/([^/]++)/reservations(*:316)'
+                        .'|locations/([^/]++)(?'
+                            .'|(*:349)'
+                        .')'
                     .')'
                 .')'
                 .'|/_(?'
-                    .'|error/(\\d+)(?:\\.([^/]++))?(*:357)'
-                    .'|wdt/([^/]++)(*:377)'
+                    .'|error/(\\d+)(?:\\.([^/]++))?(*:391)'
+                    .'|wdt/([^/]++)(*:411)'
                     .'|profiler/(?'
-                        .'|font/([^/\\.]++)\\.woff2(*:419)'
+                        .'|font/([^/\\.]++)\\.woff2(*:453)'
                         .'|([^/]++)(?'
                             .'|/(?'
-                                .'|search/results(*:456)'
-                                .'|router(*:470)'
+                                .'|search/results(*:490)'
+                                .'|router(*:504)'
                                 .'|exception(?'
-                                    .'|(*:490)'
-                                    .'|\\.css(*:503)'
+                                    .'|(*:524)'
+                                    .'|\\.css(*:537)'
                                 .')'
                             .')'
-                            .'|(*:513)'
+                            .'|(*:547)'
                         .')'
                     .')'
                 .')'
@@ -126,19 +131,23 @@ return [
         226 => [[['_route' => 'admin_voiture_edit', '_controller' => 'App\\Controller\\Admin\\VoitureCrudController::edit'], ['entityId'], ['GET' => 0, 'POST' => 1, 'PATCH' => 2], null, false, false, null]],
         240 => [[['_route' => 'admin_voiture_delete', '_controller' => 'App\\Controller\\Admin\\VoitureCrudController::delete'], ['entityId'], ['POST' => 0], null, false, false, null]],
         249 => [[['_route' => 'admin_voiture_detail', '_controller' => 'App\\Controller\\Admin\\VoitureCrudController::detail'], ['entityId'], ['GET' => 0], null, false, true, null]],
-        285 => [
+        288 => [
             [['_route' => 'api_voitures_delete', '_controller' => 'App\\Controller\\CategorieController::deleteVoiture'], ['id'], ['DELETE' => 0], null, false, true, null],
             [['_route' => 'api_voitures_update', '_controller' => 'App\\Controller\\CategorieController::updateVoiture'], ['id'], ['PUT' => 0], null, false, true, null],
         ],
-        316 => [[['_route' => 'api_voiture_reservations', '_controller' => 'App\\Controller\\ReservationController::getReservationsForVoiture'], ['id'], ['GET' => 0], null, false, false, null]],
-        357 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
-        377 => [[['_route' => '_wdt', '_controller' => 'web_profiler.controller.profiler::toolbarAction'], ['token'], null, null, false, true, null]],
-        419 => [[['_route' => '_profiler_font', '_controller' => 'web_profiler.controller.profiler::fontAction'], ['fontName'], null, null, false, false, null]],
-        456 => [[['_route' => '_profiler_search_results', '_controller' => 'web_profiler.controller.profiler::searchResultsAction'], ['token'], null, null, false, false, null]],
-        470 => [[['_route' => '_profiler_router', '_controller' => 'web_profiler.controller.router::panelAction'], ['token'], null, null, false, false, null]],
-        490 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
-        503 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
-        513 => [
+        319 => [[['_route' => 'api_voiture_reservations', '_controller' => 'App\\Controller\\ReservationController::getReservationsForVoiture'], ['id'], ['GET' => 0], null, false, false, null]],
+        349 => [
+            [['_route' => 'api_location_delete', '_controller' => 'App\\Controller\\ReservationController::deleteLocation'], ['id'], ['DELETE' => 0], null, false, true, null],
+            [['_route' => 'api_location_update', '_controller' => 'App\\Controller\\ReservationController::updateLocation'], ['id'], ['PUT' => 0], null, false, true, null],
+        ],
+        391 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
+        411 => [[['_route' => '_wdt', '_controller' => 'web_profiler.controller.profiler::toolbarAction'], ['token'], null, null, false, true, null]],
+        453 => [[['_route' => '_profiler_font', '_controller' => 'web_profiler.controller.profiler::fontAction'], ['fontName'], null, null, false, false, null]],
+        490 => [[['_route' => '_profiler_search_results', '_controller' => 'web_profiler.controller.profiler::searchResultsAction'], ['token'], null, null, false, false, null]],
+        504 => [[['_route' => '_profiler_router', '_controller' => 'web_profiler.controller.router::panelAction'], ['token'], null, null, false, false, null]],
+        524 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
+        537 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
+        547 => [
             [['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
