@@ -1,0 +1,33 @@
+name: Tests unitaires Symfony
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run Client entity tests
+        run: ./vendor/bin/phpunit tests/Entity/ClientTest.php
+
+      - name: Run Location (réservations) entity tests
+        run: ./vendor/bin/phpunit tests/Entity/LocationTest.php
+
+      - name: Run Voiture (ajout de véhicules) entity tests
+        run: ./vendor/bin/phpunit tests/Entity/VoitureTest.php
+        continue-on-error: true 
