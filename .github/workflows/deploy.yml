@@ -18,6 +18,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t mayrent-app:latest .
+        working-directory: .
 
   deploy-aws:
     name: Deploy to AWS EC2

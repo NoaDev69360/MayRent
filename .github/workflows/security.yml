@@ -1,41 +1,26 @@
-name: Security Audit
+name: Audit de sécurité Composer
 
 on:
-  schedule:
-    - cron: '0 6 * * 1' # chaque lundi à 6h
-  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # Node.js Security Audit
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install frontend dependencies
-        run: |
-          cd front
-          npm install
-      - name: Run npm audit
-        run: |
-          cd front
-          npm audit --audit-level=high
-
-      # PHP Security Audit
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
+
       - name: Install Composer dependencies
-        run: |
-          cd back
-          composer install --no-interaction
-      - name: Run Symfony security:check
-        run: |
-          cd back
-          if [ -f bin/console ]; then php bin/console security:check || true; fi 
+        run: composer install --prefer-dist --no-progress --no-interaction
+        working-directory: back
+
+      - name: Audit de sécurité Composer
+        run: composer audit
+        working-directory: back

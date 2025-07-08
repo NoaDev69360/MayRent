@@ -32,7 +32,7 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
-        working-directory: MayRent/back
+        working-directory: back
 
       - name: Wait for MySQL
         run: |
@@ -44,15 +44,15 @@ jobs:
         run: |
           echo "APP_ENV=test" > .env.test
           echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/mayrent_test" >> .env.test
-        working-directory: MayRent/back
+        working-directory: back
 
       - name: Run migrations
         run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
-        working-directory: MayRent/back
+        working-directory: back
 
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit
-        working-directory: MayRent/back
+        working-directory: back
 
   frontend:
     name: Tests React (Jest)
@@ -68,8 +68,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: MayRent/front
+        working-directory: front
 
       - name: Run tests
         run: npm test -- --watchAll=false
-        working-directory: MayRent/front
+        working-directory: front

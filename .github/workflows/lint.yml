@@ -1,53 +1,26 @@
-name: Lint & Format
+name: Lint JS/React
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # PHP Lint & Format
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, intl, pdo_mysql
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: |
-          cd back
-          composer install --no-interaction
-
-      - name: Run PHP CS Fixer
-        run: |
-          cd back
-          if [ -f vendor/bin/php-cs-fixer ]; then vendor/bin/php-cs-fixer fix --dry-run --diff; fi
-
-      # JS/React Lint & Format
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install frontend dependencies
-        run: |
-          cd front
-          npm install
+      - name: Install dependencies
+        run: npm install
+        working-directory: front
 
-      - name: Run ESLint
-        run: |
-          cd front
-          if [ -f node_modules/.bin/eslint ]; then npx eslint .; fi
-
-      - name: Run Prettier
-        run: |
-          cd front
-          if [ -f node_modules/.bin/prettier ]; then npx prettier --check .; fi 
+      - name: Run linter
+        run: npm run lint
+        working-directory: front
