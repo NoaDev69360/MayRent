@@ -6,9 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CategorieControllerTest extends WebTestCase
 {
-    /**
-     * Teste le point d'accès API pour récupérer la liste des catégories.
-     */
     public function testApiGetCategories(): void
     {
         // 1. Crée un client HTTP pour simuler un navigateur

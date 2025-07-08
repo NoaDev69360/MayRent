@@ -42,7 +42,6 @@ function MonCompte() {
     }, [navigate]);
 
     useEffect(() => {
-        // Récupère les véhicules du client connecté
         const token = localStorage.getItem('token');
         if (token) {
             api.get('/mes-voitures')

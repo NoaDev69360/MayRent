@@ -26,7 +26,7 @@ class Location
     #[ORM\ManyToOne]
     private ?Voiture $voiture = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'locations')]
     private ?\App\Entity\Client $client = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]

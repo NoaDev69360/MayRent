@@ -12,11 +12,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\LocationRepository;
+use App\Service\LogService;
 
 class ReservationController extends AbstractController
 {
     #[Route('/api/reserver', name: 'api_reserver', methods: ['POST'])]
-    public function reserver(Request $request, EntityManagerInterface $em): JsonResponse
+    public function reserver(Request $request, EntityManagerInterface $em, LogService $logService): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         if (!isset($data['voiture_id'], $data['date_debut'], $data['date_fin'], $data['prix_totale'])) {
@@ -49,6 +50,17 @@ class ReservationController extends AbstractController
 
         $em->persist($reservation);
         $em->flush();
+
+        // Log MongoDB
+        $logService->logReservation([
+            'client_id' => $client->getId(),
+            'client_email' => $client->getEmail(),
+            'voiture_id' => $voiture->getId(),
+            'voiture_modele' => $voiture->getModele(),
+            'date_debut' => $dateDebut->format('Y-m-d'),
+            'date_fin' => $dateFin->format('Y-m-d'),
+            'prix_totale' => $prixTotale
+        ]);
 
         return $this->json(['success' => true, 'message' => 'Réservation enregistrée !']);
     }

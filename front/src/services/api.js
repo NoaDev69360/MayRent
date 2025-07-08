@@ -40,25 +40,35 @@ const fetchApi = async (endpoint, options = {}) => {
     }
 
     if (!response.ok) {
-      throw new Error(data.message || data || `HTTP error! status: ${response.status}`);
+      // Affichage détaillé de l'erreur
+      console.error('API Error Details:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+        body: data
+      });
+      throw new Error(
+        (data && data.message) ||
+        (typeof data === 'string' ? data : JSON.stringify(data)) ||
+        `HTTP error! status: ${response.status}`
+      );
     }
 
     return data;
   } catch (error) {
-    console.error('API Error:', error);
+    // Affichage détaillé de l'erreur attrapée
+    console.error('API Error (catch):', error, error.stack);
     throw error;
   }
 };
 
-// Exemple de fonctions pour les requêtes API
+
 export const api = {
-  // Méthode POST générique
   post: (endpoint, data) => fetchApi(endpoint, {
     method: 'POST',
     body: JSON.stringify(data),
   }),
-
-  // Méthode GET générique
+  
   get: (endpoint, options = {}) => fetchApi(endpoint, options),
 
   // Méthode PUT générique

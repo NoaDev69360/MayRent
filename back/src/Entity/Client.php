@@ -55,15 +55,22 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Voiture>
      */
-    #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'id_client')]
+    #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'id_client', cascade: ['remove'])]
     private Collection $voitures;
 
     #[ORM\Column(length: 40, nullable: true)]
     private ?string $siret = null;
 
+    /**
+     * @var Collection<int, Location>
+     */
+    #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'client', cascade: ['remove'])]
+    private Collection $locations;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -217,5 +224,32 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUsername(): string
     {
         return (string) $this->email;
+    }
+
+    /**
+     * @return Collection<int, Location>
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): static
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations->add($location);
+            $location->setClient($this);
+        }
+        return $this;
+    }
+
+    public function removeLocation(Location $location): static
+    {
+        if ($this->locations->removeElement($location)) {
+            if ($location->getClient() === $this) {
+                $location->setClient(null);
+            }
+        }
+        return $this;
     }
 }
