@@ -256,7 +256,21 @@ function MonCompte() {
                             <div style={{display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center'}}>
                                 {mesVoitures.map(v => (
                                     <div key={v.id} style={{background: '#f9f9f9', borderRadius: 8, boxShadow: '0 1px 4px #eee', padding: 16, minWidth: 220, maxWidth: 250, textAlign: 'center'}}>
-                                        <img src={v.image_url ? v.image_url : (v.image && v.image !== 'default.jpg' ? v.image : '/MayRent/back/public/uploads/voitures/default.jpg')} alt={v.modele} style={{width: '100%', height: 100, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0'}} />
+                                        <img
+                                            src={
+                                                v.image_url
+                                                    ? v.image_url // Cas Imgur ou URL externe
+                                                    : (v.image
+                                                        ? (v.image.startsWith('http')
+                                                            ? v.image // Cas URL complète (ex: Imgur)
+                                                            : `http://localhost:8080/uploads/voitures/${v.image}` // Cas image locale
+                                                          )
+                                                        : '/MayRent/back/public/uploads/voitures/default.jpg' // Cas image par défaut
+                                                      )
+                                            }
+                                            alt={v.modele || v.name}
+                                            style={{ width: '100%', height: 100, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0' }}
+                                        />
                                         {editId === v.id ? (
                                             <>
                                                 <input type="text" name="modele" value={editForm.modele || ''} onChange={handleEditChange} placeholder="Modèle" style={{width: '100%', marginBottom: 4}} />
@@ -321,7 +335,7 @@ function MonCompte() {
                             <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} required style={{width: '100%', minHeight: 60, resize: 'vertical'}} />
                             <input type="file" name="image" accept="image/*" onChange={handleChange} required style={{marginTop: 8}} />
                             {form.image && (
-                                <img src={URL.createObjectURL(form.image)} alt="Aperçu" style={{width: '100%', maxHeight: 120, objectFit: 'contain', marginTop: 8}} />
+                                <img src={URL.createObjectURL(form.image)} alt="Aperçu" style={{width: '400px', height: '300px', objectFit: 'cover', marginTop: 8}} />
                             )}
                             <button type="submit" className="nav-button" style={{alignSelf: 'center', marginTop: 16}}>Ajouter le véhicule</button>
                         </form>
@@ -336,7 +350,21 @@ function MonCompte() {
                         <div style={{display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center'}}>
                             {mesLocations.map(loc => (
                                 <div key={loc.id} style={{background: '#f9f9f9', borderRadius: 8, boxShadow: '0 1px 4px #eee', padding: 16, minWidth: 220, maxWidth: 250, textAlign: 'center'}}>
-                                    <img src={loc.voiture.image_url} alt={loc.voiture.modele} style={{width: '100%', height: 100, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0'}} />
+                                    <img
+                                        src={
+                                            loc.voiture.image_url
+                                                ? loc.voiture.image_url
+                                                : (loc.voiture.image
+                                                    ? (loc.voiture.image.startsWith('http')
+                                                        ? loc.voiture.image
+                                                        : `http://localhost:8080/uploads/voitures/${loc.voiture.image}`
+                                                      )
+                                                    : '/MayRent/back/public/uploads/voitures/default.jpg'
+                                                  )
+                                        }
+                                        alt={loc.voiture.modele || loc.voiture.name}
+                                        style={{ width: '100%', height: 100, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0' }}
+                                    />
                                     <div style={{fontWeight: 600, fontSize: 16, marginBottom: 4}}>{loc.voiture.modele}</div>
                                     <div style={{color: '#007bff', fontWeight: 500, marginBottom: 4}}>{loc.prix_totale} €</div>
                                     <div style={{color: '#666', fontSize: 14}}>Du {loc.date_debut} au {loc.date_fin}</div>

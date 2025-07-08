@@ -36,6 +36,8 @@ security:
         ROLE_LOCATAIRE: ROLE_USER
 
     access_control:
+        - { path: ^/api/reserver, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/create-checkout-session, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/categories, roles: PUBLIC_ACCESS }

@@ -226,6 +226,11 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+    public function __toString()
+    {
+        return $this->getNom() . ' ' . $this->getPrenom() . ' (' . $this->getEmail() . ')';
+    }
+
     /**
      * @return Collection<int, Location>
      */

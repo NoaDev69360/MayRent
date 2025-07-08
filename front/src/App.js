@@ -143,7 +143,21 @@ function App() {
                 <div className="favorite-cars-grid">
                   {favoriteCars.length > 0 ? favoriteCars.map((car) => (
                     <div className="favorite-car-card" key={car.id} style={{background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px #eee', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12}}>
-                      <img src={car.image_url ? car.image_url : (car.image && car.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${car.image}` : '/MayRent/back/public/uploads/voitures/default.jpg')} alt={car.modele} style={{width: '100%', height: 120, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0'}} />
+                      <img
+                        src={
+                          car.image_url
+                            ? car.image_url
+                            : (car.image
+                                ? (car.image.startsWith('http')
+                                    ? car.image
+                                    : `http://localhost:8080/uploads/voitures/${car.image}`
+                                  )
+                                : '/MayRent/back/public/uploads/voitures/default.jpg'
+                              )
+                        }
+                        alt={car.modele || car.name}
+                        style={{width: '100%', height: 120, objectFit: 'cover', borderRadius: 6, marginBottom: 8, background: '#f0f0f0'}}
+                      />
                       <div style={{fontWeight: 600, fontSize: 18, marginBottom: 4}}>{car.modele}</div>
                       <div style={{color: '#007bff', fontWeight: 500, marginBottom: 8}}>{car.prix_jour} € / jour</div>
                       <button className="search-button" style={{padding: '0.5rem 1.2rem', fontSize: 15}} onClick={() => navigate('/produits', { state: { vehicule: car } })}>

@@ -138,24 +138,29 @@ function IntermediaireProduit() {
                 <div className="products-section">
                     <div className="products-header">
                         <h1>Nos Produits</h1>
-                        <button className="maps-button" onClick={toggleView}>
+                        {/* <button className="maps-button" onClick={toggleView}>
                             <i className={`fas fa-${isMapView ? 'list' : 'map-marker-alt'}`}></i>
                             {isMapView ? 'Voir la liste' : 'Voir sur la carte'}
-                        </button>
+                        </button> */}
                     </div>
                     <div className="products-grid">
                         {filteredVehicles.map((vehicule) => (
                             <div key={vehicule.id} className="product-card">
                                 <div className="product-image">
-                                    {vehicule && (vehicule.image_url || vehicule.image) ? (
-                                        <img
-                                            src={vehicule.image_url ? vehicule.image_url : (vehicule.image && vehicule.image.startsWith('http') ? vehicule.image : (vehicule.image && vehicule.image !== 'default.jpg' ? `/MayRent/back/public/uploads/voitures/${vehicule.image}` : '/MayRent/back/public/uploads/voitures/default.jpg'))}
-                                            alt={vehicule.modele}
-                                            style={{width: '100%', height: '100%', objectFit: 'cover'}}
-                                        />
-                                    ) : (
-                                        <div style={{width: '100%', height: '100%', background: '#eee'}}></div>
-                                    )}
+                                    <img
+                                        src={
+                                            vehicule.image_url
+                                                ? vehicule.image_url
+                                                : (vehicule.image
+                                                    ? (vehicule.image.startsWith('http')
+                                                        ? vehicule.image
+                                                        : `http://localhost:8080/uploads/voitures/${vehicule.image}`
+                                                    )
+                                                    : '/MayRent/back/public/uploads/voitures/default.jpg'
+                                                )
+                                        }
+                                        alt={vehicule.modele || vehicule.name}
+                                    />
                                 </div>
                                 <div style={{padding: '8px', textAlign: 'center'}}>
                                     <strong>{vehicule.modele}</strong>

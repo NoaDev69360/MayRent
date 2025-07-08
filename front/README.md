@@ -41,8 +41,6 @@ Backend (Symfony)
 
     JWT (Authentification sécurisée)
 
-    Stripe/PayPal (Paiements en ligne)
-
     MySQL (Base de données)
 
 Outils & Services

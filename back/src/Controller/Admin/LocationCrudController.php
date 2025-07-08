@@ -7,6 +7,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 
 class LocationCrudController extends AbstractCrudController
 {
@@ -15,14 +18,16 @@ class LocationCrudController extends AbstractCrudController
         return Location::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            DateTimeField::new('date_debut'),
+            DateTimeField::new('date_fin'),
+            NumberField::new('prix_totale'),
+            TextField::new('lieu_depart'),
+            AssociationField::new('client'),
+            AssociationField::new('voiture'),
         ];
     }
-    */
 }

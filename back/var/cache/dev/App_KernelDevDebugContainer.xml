@@ -81,7 +81,7 @@
         <parameter key="namespace">Symfony\Bundle\MonologBundle</parameter>
       </parameter>
       <parameter key="MakerBundle" type="collection">
-        <parameter key="path">C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\maker-bundle\src</parameter>
+        <parameter key="path">C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\maker-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\MakerBundle</parameter>
       </parameter>
       <parameter key="LexikJWTAuthenticationBundle" type="collection">
@@ -228,6 +228,7 @@
     <parameter key="doctrine.orm.naming_strategy.underscore.class">Doctrine\ORM\Mapping\UnderscoreNamingStrategy</parameter>
     <parameter key="doctrine.orm.quote_strategy.default.class">Doctrine\ORM\Mapping\DefaultQuoteStrategy</parameter>
     <parameter key="doctrine.orm.quote_strategy.ansi.class">Doctrine\ORM\Mapping\AnsiQuoteStrategy</parameter>
+    <parameter key="doctrine.orm.typed_field_mapper.default.class">Doctrine\ORM\Mapping\DefaultTypedFieldMapper</parameter>
     <parameter key="doctrine.orm.entity_listener_resolver.class">Doctrine\Bundle\DoctrineBundle\Mapping\ContainerEntityListenerResolver</parameter>
     <parameter key="doctrine.orm.second_level_cache.default_cache_factory.class">Doctrine\ORM\Cache\DefaultCacheFactory</parameter>
     <parameter key="doctrine.orm.second_level_cache.default_region.class">Doctrine\ORM\Cache\Region\DefaultRegion</parameter>
@@ -263,7 +264,6 @@
           <parameter>OPTIONS</parameter>
         </parameter>
         <parameter key="max_age">3600</parameter>
-        <parameter key="skip_same_as_origin">true</parameter>
       </parameter>
     </parameter>
     <parameter key="nelmio_cors.defaults" type="collection">
@@ -272,6 +272,7 @@
       </parameter>
       <parameter key="allow_credentials">true</parameter>
       <parameter key="allow_headers">true</parameter>
+      <parameter key="allow_private_network">false</parameter>
       <parameter key="expose_headers" type="collection">
         <parameter>Content-Type</parameter>
         <parameter>Authorization</parameter>
@@ -547,6 +548,9 @@
         <argument type="service" id=".service_locator.QaaoWjx.App\Controller\ReservationController"/>
       </call>
     </service>
+    <service id="App\Controller\SynchTest" class="App\Controller\SynchTest" autowire="true" autoconfigure="true">
+      <tag name="container.error" message="The autoloader expected class &quot;App\Controller\SynchTest&quot; to be defined in file &quot;C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\composer/../../src\Controller\SynchTest.php&quot;. The file was found but the class was not in it, the class name or namespace probably has a typo."/>
+    </service>
     <service id="App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true">
       <tag name="doctrine.fixture.orm"/>
     </service>
@@ -677,7 +681,9 @@
       <argument type="service" id="debug.argument_resolver"/>
       <argument>true</argument>
     </service>
-    <service id="request_stack" class="Symfony\Component\HttpFoundation\RequestStack" public="true"/>
+    <service id="request_stack" class="Symfony\Component\HttpFoundation\RequestStack" public="true">
+      <tag name="kernel.reset" method="resetRequestFormats" on_invalid="ignore"/>
+    </service>
     <service id="http_cache" class="Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache">
       <tag name="container.hot_path"/>
       <argument type="service" id="kernel"/>
@@ -722,6 +728,8 @@
     </service>
     <service id="services_resetter" class="Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter" public="true">
       <argument type="iterator">
+        <argument key="request_stack" type="service" id="request_stack" on-invalid="ignore_uninitialized"/>
+        <argument key="container.env_var_processor" type="service" id="container.env_var_processor" on-invalid="ignore_uninitialized"/>
         <argument key="cache.app" type="service" id="cache.app" on-invalid="ignore_uninitialized"/>
         <argument key="cache.system" type="service" id="cache.system" on-invalid="ignore_uninitialized"/>
         <argument key="cache.validator" type="service" id="cache.validator" on-invalid="ignore_uninitialized"/>
@@ -730,6 +738,7 @@
         <argument key="cache.asset_mapper" type="service" id="cache.asset_mapper" on-invalid="ignore_uninitialized"/>
         <argument key="cache.messenger.restart_workers_signal" type="service" id="cache.messenger.restart_workers_signal" on-invalid="ignore_uninitialized"/>
         <argument key="http_client.transport" type="service" id="http_client.transport" on-invalid="ignore_uninitialized"/>
+        <argument key="http_client" type="service" id=".debug.http_client" on-invalid="ignore_uninitialized"/>
         <argument key="mailer.message_logger_listener" type="service" id="mailer.message_logger_listener" on-invalid="ignore_uninitialized"/>
         <argument key="translation.locale_switcher" type="service" id="translation.locale_switcher" on-invalid="ignore_uninitialized"/>
         <argument key="debug.stopwatch" type="service" id="debug.stopwatch" on-invalid="ignore_uninitialized"/>
@@ -744,6 +753,7 @@
         <argument key="doctrine" type="service" id="doctrine" on-invalid="ignore_uninitialized"/>
         <argument key="doctrine.debug_data_holder" type="service" id="doctrine.debug_data_holder" on-invalid="ignore_uninitialized"/>
         <argument key="form.type.entity" type="service" id="form.type.entity" on-invalid="ignore_uninitialized"/>
+        <argument key="twig" type="service" id="twig" on-invalid="ignore_uninitialized"/>
         <argument key="twig.form.engine" type="service" id="twig.form.engine" on-invalid="ignore_uninitialized"/>
         <argument key="security.token_storage" type="service" id="security.token_storage" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_expression_language" type="service" id="cache.security_expression_language" on-invalid="ignore_uninitialized"/>
@@ -763,6 +773,12 @@
         <argument key=".debug.http_client" type="service" id=".debug.http_client" on-invalid="ignore_uninitialized"/>
       </argument>
       <argument type="collection">
+        <argument key="request_stack" type="collection">
+          <argument>?resetRequestFormats</argument>
+        </argument>
+        <argument key="container.env_var_processor" type="collection">
+          <argument>reset</argument>
+        </argument>
         <argument key="cache.app" type="collection">
           <argument>reset</argument>
         </argument>
@@ -785,6 +801,9 @@
           <argument>reset</argument>
         </argument>
         <argument key="http_client.transport" type="collection">
+          <argument>?reset</argument>
+        </argument>
+        <argument key="http_client" type="collection">
           <argument>?reset</argument>
         </argument>
         <argument key="mailer.message_logger_listener" type="collection">
@@ -828,6 +847,9 @@
         </argument>
         <argument key="form.type.entity" type="collection">
           <argument>reset</argument>
+        </argument>
+        <argument key="twig" type="collection">
+          <argument>resetGlobals</argument>
         </argument>
         <argument key="twig.form.engine" type="collection">
           <argument>reset</argument>
@@ -900,6 +922,7 @@
     </service>
     <service id="container.env_var_processor" class="Symfony\Component\DependencyInjection\EnvVarProcessor">
       <tag name="container.env_var_processor"/>
+      <tag name="kernel.reset" method="reset"/>
       <argument type="service" id="service_container"/>
       <argument type="tagged_iterator" tag="container.env_var_loader"/>
     </service>
@@ -1441,6 +1464,7 @@
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\easycorp\easyadmin-bundle/translations</argument>
       </argument>
       <argument type="collection">
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\easycorp\easyadmin-bundle\src/../templates/</argument>
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\twig-bridge/Resources/views/Email</argument>
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\twig-bridge/Resources/views/Form</argument>
       </argument>
@@ -1468,6 +1492,7 @@
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\easycorp\easyadmin-bundle/translations</argument>
       </argument>
       <argument type="collection">
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\easycorp\easyadmin-bundle\src/../templates/</argument>
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\twig-bridge/Resources/views/Email</argument>
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\twig-bridge/Resources/views/Form</argument>
       </argument>
@@ -1833,7 +1858,6 @@
     </service>
     <service id="cache.system_clearer" class="Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer" public="true">
       <tag name="cache.pool.clearer"/>
-      <tag name="kernel.cache_clearer"/>
       <argument type="collection">
         <argument key="cache.system" type="service" id="cache.system" on-invalid="ignore_uninitialized"/>
         <argument key="cache.validator" type="service" id="cache.validator" on-invalid="ignore_uninitialized"/>
@@ -2634,7 +2658,7 @@
           <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\nelmio\cors-bundle/translations</argument>
           <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\security-bundle/translations</argument>
           <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\monolog-bundle/translations</argument>
-          <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\maker-bundle\src/translations</argument>
+          <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\maker-bundle/translations</argument>
           <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\lexik\jwt-authentication-bundle/translations</argument>
           <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\ux-twig-component/translations</argument>
           <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\doctrine\doctrine-fixtures-bundle/translations</argument>
@@ -2658,7 +2682,7 @@
             <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\nelmio\cors-bundle/translations</argument>
             <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\security-bundle/translations</argument>
             <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\monolog-bundle/translations</argument>
-            <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\maker-bundle\src/translations</argument>
+            <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\maker-bundle/translations</argument>
             <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\lexik\jwt-authentication-bundle/translations</argument>
             <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\ux-twig-component/translations</argument>
             <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\doctrine\doctrine-fixtures-bundle/translations</argument>
@@ -3018,6 +3042,22 @@
           <argument>onKernelController</argument>
         </argument>
         <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>console.command</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="doctrine_migrations.schema_filter_listener"/>
+          <argument>onConsoleCommand</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="turbo.kernel.request_listener"/>
+          <argument>__invoke</argument>
+        </argument>
+        <argument>256</argument>
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
@@ -3442,6 +3482,14 @@
           <argument>onKernelResponse</argument>
         </argument>
         <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="doctrine.dbal.idle_connection_listener"/>
+          <argument>onKernelRequest</argument>
+        </argument>
+        <argument>192</argument>
       </call>
       <call method="addListener">
         <argument>Symfony\Component\Messenger\Event\WorkerMessageHandledEvent</argument>
@@ -4152,7 +4200,7 @@
       <tag name="kernel.event_subscriber"/>
       <tag name="container.hot_path"/>
       <tag name="container.hot_path"/>
-      <argument type="service" id=".service_locator.zqtiJAI"/>
+      <argument type="service" id=".service_locator.ECaP3MA"/>
       <argument>true</argument>
       <argument>%session.storage.options%</argument>
     </service>
@@ -4865,7 +4913,7 @@
     <service id="notifier.channel.push" class="Symfony\Component\Notifier\Channel\PushChannel">
       <tag name="notifier.channel" channel="push"/>
       <argument>null</argument>
-      <argument type="service" id="debug.traced.messenger.bus.default" on-invalid="ignore"/>
+      <argument type="service" id="debug.traced.messenger.bus.default" on-invalid="null"/>
     </service>
     <service id="notifier.monolog_handler" class="Symfony\Bridge\Monolog\Handler\NotifierHandler">
       <argument type="service" id="notifier"/>
@@ -5015,11 +5063,17 @@
     <service id="console_profiler_listener" class="Symfony\Bundle\FrameworkBundle\EventListener\ConsoleProfilerListener">
       <tag name="kernel.event_subscriber"/>
       <tag name="container.no_preload"/>
-      <argument type="service" id="profiler"/>
+      <argument type="service" id=".lazy_profiler"/>
       <argument type="service" id=".virtual_request_stack"/>
       <argument type="service" id="debug.stopwatch"/>
       <argument>%env(not:default:kernel.runtime_mode.web:)%</argument>
       <argument type="service" id="router.default" on-invalid="null"/>
+    </service>
+    <service id=".lazy_profiler" class="Symfony\Component\HttpKernel\Profiler\Profiler" lazy="true">
+      <argument type="collection">
+        <argument type="service" id="profiler"/>
+      </argument>
+      <factory function="current"/>
     </service>
     <service id=".virtual_request_stack" class="Symfony\Component\HttpKernel\Debug\VirtualRequestStack" public="true">
       <argument type="service" id="request_stack"/>
@@ -5292,28 +5346,26 @@
       <argument type="service" id="doctrine"/>
       <argument type="service" id="profiler"/>
     </service>
+    <service id="doctrine.dbal.idle_connection_listener" class="Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="doctrine.dbal.connection_expiries"/>
+      <argument type="service" id="service_container"/>
+    </service>
     <service id="doctrine.dbal.default_schema_manager_factory" class="Doctrine\DBAL\Schema\DefaultSchemaManagerFactory"/>
     <service id="doctrine.dbal.legacy_schema_manager_factory" class="Doctrine\DBAL\Schema\LegacySchemaManagerFactory"/>
     <service id="doctrine.dbal.default_connection.configuration" class="Doctrine\DBAL\Configuration">
       <call method="setSchemaManagerFactory">
         <argument type="service" id="doctrine.dbal.legacy_schema_manager_factory"/>
       </call>
+      <call method="setSchemaAssetsFilter">
+        <argument type="service" id="doctrine.dbal.default_schema_asset_filter_manager"/>
+      </call>
       <call method="setMiddlewares">
         <argument type="collection">
-          <argument type="service">
-            <service class="Doctrine\DBAL\Logging\Middleware">
-              <argument type="service" id="monolog.logger.doctrine"/>
-            </service>
-          </argument>
-          <argument type="service">
-            <service class="Doctrine\Bundle\DoctrineBundle\Middleware\DebugMiddleware">
-              <argument type="service" id="doctrine.debug_data_holder"/>
-              <argument type="service" id="debug.stopwatch" on-invalid="null"/>
-              <call method="setConnectionName">
-                <argument>default</argument>
-              </call>
-            </service>
-          </argument>
+          <argument type="service" id="doctrine.dbal.logging_middleware.default"/>
+          <argument type="service" id="doctrine.dbal.debug_middleware.default"/>
+          <argument type="service" id="doctrine.dbal.idle_connection_middleware.default"/>
         </argument>
       </call>
     </service>
@@ -5381,6 +5433,7 @@
         <argument key="url">%env(resolve:DATABASE_URL)%</argument>
         <argument key="use_savepoints">true</argument>
         <argument key="driver">pdo_mysql</argument>
+        <argument key="idle_connection_ttl">600</argument>
         <argument key="host">localhost</argument>
         <argument key="port">null</argument>
         <argument key="user">root</argument>
@@ -5409,6 +5462,7 @@
         </service>
       </argument>
     </service>
+    <service id="doctrine.dbal.connection_expiries" class="ArrayObject"/>
     <service id="doctrine.dbal.logging_middleware" class="Doctrine\DBAL\Logging\Middleware" abstract="true">
       <tag name="monolog.logger" channel="doctrine"/>
       <tag name="doctrine.middleware" connection="default" priority="10"/>
@@ -5424,6 +5478,13 @@
       <tag name="doctrine.middleware" connection="default" priority="10"/>
       <argument type="service" id="doctrine.debug_data_holder"/>
       <argument type="service" id="debug.stopwatch" on-invalid="null"/>
+    </service>
+    <service id="doctrine.dbal.idle_connection_middleware" class="Doctrine\Bundle\DoctrineBundle\Middleware\IdleConnectionMiddleware" abstract="true">
+      <tag name="doctrine.middleware" connection="default" priority="10"/>
+      <argument type="service" id="doctrine.dbal.connection_expiries"/>
+      <argument type="collection">
+        <argument key="default">600</argument>
+      </argument>
     </service>
     <service id="messenger.middleware.doctrine_transaction" class="Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware" abstract="true">
       <argument type="service" id="doctrine"/>
@@ -5513,6 +5574,7 @@
     </service>
     <service id="doctrine.orm.quote_strategy.default" class="Doctrine\ORM\Mapping\DefaultQuoteStrategy"/>
     <service id="doctrine.orm.quote_strategy.ansi" class="Doctrine\ORM\Mapping\AnsiQuoteStrategy"/>
+    <service id="doctrine.orm.typed_field_mapper.default" class="Doctrine\ORM\Mapping\DefaultTypedFieldMapper"/>
     <service id="doctrine.ulid_generator" class="Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator">
       <tag name="doctrine.id_generator"/>
       <argument type="service" id="ulid.factory" on-invalid="ignore"/>
@@ -5541,6 +5603,7 @@
           <argument>false</argument>
         </service>
       </argument>
+      <argument type="collection"/>
     </service>
     <service id="doctrine.orm.entity_value_resolver.expression_language" class="Symfony\Component\ExpressionLanguage\ExpressionLanguage"/>
     <service id="doctrine.cache_clear_metadata_command" class="Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand">
@@ -5682,11 +5745,17 @@
       <call method="setQuoteStrategy">
         <argument type="service" id="doctrine.orm.quote_strategy.default"/>
       </call>
+      <call method="setTypedFieldMapper">
+        <argument type="service" id="doctrine.orm.typed_field_mapper.default"/>
+      </call>
       <call method="setEntityListenerResolver">
         <argument type="service" id="doctrine.orm.default_entity_listener_resolver"/>
       </call>
       <call method="setLazyGhostObjectEnabled">
         <argument>true</argument>
+      </call>
+      <call method="setIdentityGenerationPreferences">
+        <argument type="collection"/>
       </call>
       <call method="setRepositoryFactory">
         <argument type="service" id="doctrine.orm.container_repository_factory"/>
@@ -5932,6 +6001,12 @@
         <argument>Manually add and delete migration versions from the version table.</argument>
       </call>
     </service>
+    <service id="doctrine_migrations.schema_filter_listener" class="Doctrine\Bundle\MigrationsBundle\EventListener\SchemaFilterListener">
+      <tag name="doctrine.dbal.schema_filter" connection="default"/>
+      <tag name="kernel.event_listener" event="console.command" method="onConsoleCommand"/>
+      <tag name="container.no_preload"/>
+      <argument>doctrine_migration_versions</argument>
+    </service>
     <service id="doctrine.migrations.storage.table_storage" class="Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration"/>
     <service id="twig.extension.dump" class="Symfony\Bridge\Twig\Extension\DumpExtension">
       <tag name="twig.extension"/>
@@ -6059,6 +6134,7 @@
       <tag name="container.preload" class="Twig\ExtensionSet"/>
       <tag name="container.preload" class="Twig\Template"/>
       <tag name="container.preload" class="Twig\TemplateWrapper"/>
+      <tag name="kernel.reset" method="resetGlobals"/>
       <argument type="service" id="twig.loader.native_filesystem"/>
       <argument type="collection">
         <argument key="cache">C:\wamp64\www\EXAM-CDA\MayRent\back\var\cache\dev/twig</argument>
@@ -6134,6 +6210,9 @@
         <argument type="service" id="turbo.twig.extension"/>
       </call>
       <call method="addExtension">
+        <argument type="service" id="twig.extension.html"/>
+      </call>
+      <call method="addExtension">
         <argument type="service" id="ux.twig_component.twig.component_extension"/>
       </call>
       <call method="addExtension">
@@ -6192,6 +6271,7 @@
     <service id="twig.template_iterator" class="Symfony\Bundle\TwigBundle\TemplateIterator">
       <argument type="service" id="kernel"/>
       <argument type="collection">
+        <argument key="C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\easycorp\easyadmin-bundle\src/../templates/">ea</argument>
         <argument key="C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\twig-bridge/Resources/views/Email">email</argument>
         <argument key="C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\twig-bridge/Resources/views/Form">null</argument>
       </argument>
@@ -6211,6 +6291,10 @@
       <argument type="collection"/>
       <argument>C:\wamp64\www\EXAM-CDA\MayRent\back</argument>
       <call method="addPath">
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\easycorp\easyadmin-bundle\src/../templates/</argument>
+        <argument>ea</argument>
+      </call>
+      <call method="addPath">
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\doctrine\doctrine-bundle/templates</argument>
         <argument>Doctrine</argument>
       </call>
@@ -6219,11 +6303,11 @@
         <argument>!Doctrine</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\doctrine\doctrine-migrations-bundle/Resources/views</argument>
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\doctrine\doctrine-migrations-bundle/templates</argument>
         <argument>DoctrineMigrations</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\doctrine\doctrine-migrations-bundle/Resources/views</argument>
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\doctrine\doctrine-migrations-bundle/templates</argument>
         <argument>!DoctrineMigrations</argument>
       </call>
       <call method="addPath">
@@ -6243,12 +6327,28 @@
         <argument>!WebProfiler</argument>
       </call>
       <call method="addPath">
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\ux-turbo/templates</argument>
+        <argument>Turbo</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\ux-turbo/templates</argument>
+        <argument>!Turbo</argument>
+      </call>
+      <call method="addPath">
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\security-bundle/Resources/views</argument>
         <argument>Security</argument>
       </call>
       <call method="addPath">
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\security-bundle/Resources/views</argument>
         <argument>!Security</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\maker-bundle/templates</argument>
+        <argument>Maker</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\maker-bundle/templates</argument>
+        <argument>!Maker</argument>
       </call>
       <call method="addPath">
         <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\vendor\symfony\ux-twig-component/templates</argument>
@@ -6341,7 +6441,7 @@
       <argument type="service" id="twig"/>
     </service>
     <service id="twig.runtime_loader" class="Twig\RuntimeLoader\ContainerRuntimeLoader">
-      <argument type="service" id=".service_locator.DSbTGon"/>
+      <argument type="service" id=".service_locator.T1kVy8z"/>
     </service>
     <service id="twig.error_renderer.html" class="Symfony\Bridge\Twig\ErrorRenderer\TwigErrorRenderer">
       <argument type="service" id="twig"/>
@@ -6540,6 +6640,9 @@
     </service>
     <service id="turbo.twig.extension" class="Symfony\UX\Turbo\Twig\TwigExtension">
       <tag name="twig.extension"/>
+    </service>
+    <service id="turbo.twig.runtime" class="Symfony\UX\Turbo\Twig\TurboRuntime">
+      <tag name="twig.runtime"/>
       <argument type="service" id=".service_locator.GIuJv7e"/>
       <argument>default</argument>
     </service>
@@ -6549,7 +6652,14 @@
       <argument type="service" id="turbo.broadcaster.action_renderer"/>
       <argument>null</argument>
     </service>
+    <service id="turbo.kernel.request_listener" class="Symfony\UX\Turbo\Request\RequestListener">
+      <tag name="kernel.event_listener" event="kernel.request" priority="256"/>
+      <tag name="container.hot_path"/>
+    </service>
     <service id="twig.missing_extension_suggestor" class="Twig\Extra\TwigExtraBundle\MissingExtensionSuggestor"/>
+    <service id="twig.extension.html" class="Twig\Extra\Html\HtmlExtension">
+      <tag name="twig.extension"/>
+    </service>
     <service id="nelmio_cors.cors_listener" class="Nelmio\CorsBundle\EventListener\CorsListener">
       <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="250"/>
       <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" priority="0"/>
@@ -6583,7 +6693,7 @@
     </service>
     <service id="security.untracked_token_storage" class="Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage"/>
     <service id="security.helper" class="Symfony\Bundle\SecurityBundle\Security">
-      <argument type="service" id=".service_locator.jeoT_vU"/>
+      <argument type="service" id=".service_locator.NXTTdTW"/>
       <argument type="collection">
         <argument key="dev">null</argument>
         <argument key="login" type="service" id=".service_locator.D16UbTj"/>
@@ -6607,6 +6717,12 @@
       <argument>none</argument>
     </service>
     <service id="security.user_checker" class="Symfony\Component\Security\Core\User\InMemoryUserChecker"/>
+    <service id="security.user_checker_locator" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <argument type="collection">
+        <argument key="login" type="service_closure" id="security.user_checker"/>
+        <argument key="api" type="service_closure" id="security.user_checker"/>
+      </argument>
+    </service>
     <service id="security.expression_language" class="Symfony\Component\Security\Core\Authorization\ExpressionLanguage">
       <argument type="service" id="cache.security_expression_language" on-invalid="null"/>
     </service>
@@ -6795,6 +6911,20 @@
       </argument>
     </service>
     <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap">
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.QafsxE1"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_FULLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.tZzLkXA"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
       <call method="add">
         <argument type="service" id=".security.request_matcher.S.FPR_b"/>
         <argument type="collection">
@@ -7419,6 +7549,22 @@
         <argument key="security.firewall.map.context.api" type="service_closure" id="security.firewall.map.context.api"/>
       </argument>
     </service>
+    <service id=".security.request_matcher.sLVgRyB" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/reserver</argument>
+    </service>
+    <service id=".security.request_matcher.QafsxE1" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.sLVgRyB"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.X_YCZo4" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/create-checkout-session</argument>
+    </service>
+    <service id=".security.request_matcher.tZzLkXA" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.X_YCZo4"/>
+      </argument>
+    </service>
     <service id=".security.request_matcher.S.FPR_b" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
       <argument type="collection">
         <argument type="service" id=".security.request_matcher..tvo6Vp"/>
@@ -7603,7 +7749,11 @@
     <service id="maker.php_compat_util" class="Symfony\Bundle\MakerBundle\Util\PhpCompatUtil">
       <argument type="service" id="maker.file_manager"/>
     </service>
-    <service id="maker.template_component_generator" class="Symfony\Bundle\MakerBundle\Util\TemplateComponentGenerator"/>
+    <service id="maker.template_component_generator" class="Symfony\Bundle\MakerBundle\Util\TemplateComponentGenerator">
+      <argument>true</argument>
+      <argument>false</argument>
+      <argument>App</argument>
+    </service>
     <service id="maker.maker.make_authenticator" class="Symfony\Bundle\MakerBundle\Maker\MakeAuthenticator">
       <tag name="maker.command"/>
       <argument type="service" id="maker.file_manager"/>
@@ -7617,6 +7767,7 @@
     </service>
     <service id="maker.maker.make_twig_component" class="Symfony\Bundle\MakerBundle\Maker\MakeTwigComponent">
       <tag name="maker.command"/>
+      <argument type="service" id="maker.file_manager"/>
     </service>
     <service id="maker.maker.make_controller" class="Symfony\Bundle\MakerBundle\Maker\MakeController">
       <tag name="maker.command"/>
@@ -7936,7 +8087,7 @@
     <service id="ux.twig_component.component_factory" class="Symfony\UX\TwigComponent\ComponentFactory">
       <tag name="kernel.reset" method="reset"/>
       <argument type="service" id="ux.twig_component.component_template_finder"/>
-      <argument type="service" id=".service_locator.kwKnG3z"/>
+      <argument type="service" id=".service_locator.WBY8UNJ"/>
       <argument type="service" id="property_accessor"/>
       <argument type="service" id="debug.event_dispatcher"/>
       <argument type="collection">
@@ -7949,9 +8100,31 @@
           <argument key="mount" type="collection"/>
           <argument key="post_mount" type="collection"/>
         </argument>
+        <argument key="ea:Flag" type="collection">
+          <argument key="key">ea:Flag</argument>
+          <argument key="service_id">EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Flag</argument>
+          <argument key="class">EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Flag</argument>
+          <argument key="template">@EasyAdmin/components/Flag.html.twig</argument>
+          <argument key="pre_mount" type="collection"/>
+          <argument key="mount" type="collection"/>
+          <argument key="post_mount" type="collection"/>
+        </argument>
+        <argument key="ea:Alert" type="collection">
+          <argument key="key">ea:Alert</argument>
+          <argument key="service_id">EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Alert</argument>
+          <argument key="class">EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Alert</argument>
+          <argument key="template">@EasyAdmin/components/Alert.html.twig</argument>
+          <argument key="pre_mount" type="collection"/>
+          <argument key="mount" type="collection">
+            <argument>mount</argument>
+          </argument>
+          <argument key="post_mount" type="collection"/>
+        </argument>
       </argument>
       <argument type="collection">
         <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Icon">ea:Icon</argument>
+        <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Flag">ea:Flag</argument>
+        <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Alert">ea:Alert</argument>
       </argument>
       <argument type="service" id="twig"/>
     </service>
@@ -7960,6 +8133,8 @@
       <argument type="service" id="property_accessor"/>
       <argument type="collection">
         <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Icon">null</argument>
+        <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Flag">null</argument>
+        <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Alert">null</argument>
       </argument>
       <argument type="service" id="cache.ux.twig_component" on-invalid="ignore"/>
     </service>
@@ -7992,6 +8167,8 @@
       <argument type="service" id="twig"/>
       <argument type="collection">
         <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Icon">ea:Icon</argument>
+        <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Flag">ea:Flag</argument>
+        <argument key="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Alert">ea:Alert</argument>
       </argument>
       <argument>components/</argument>
       <call method="setName">
@@ -8105,6 +8282,9 @@
       <argument type="service" id="router.default"/>
       <argument type="service" id="router.default"/>
       <argument type="service" id="cache.easyadmin"/>
+      <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminRouteGenerator"/>
+      <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\var\cache\dev</argument>
+      <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Registry\CrudControllerRegistry"/>
     </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Factory\ControllerFactory" class="EasyCorp\Bundle\EasyAdminBundle\Factory\ControllerFactory">
       <argument type="service" id="debug.controller_resolver"/>
@@ -8143,10 +8323,15 @@
       <argument type="tagged_iterator" tag="ea.dashboard_controller"/>
       <argument type="tagged_iterator" tag="ea.crud_controller"/>
       <argument type="service" id="cache.easyadmin"/>
+      <argument type="service" id="filesystem"/>
+      <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\var\cache\dev</argument>
+      <argument>en</argument>
     </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminRouteLoader" class="EasyCorp\Bundle\EasyAdminBundle\Router\AdminRouteLoader">
       <tag name="routing.loader" type="easyadmin.routes"/>
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminRouteGenerator"/>
+      <argument type="service" id="filesystem"/>
+      <argument>C:\wamp64\www\EXAM-CDA\MayRent\back\var\cache\dev</argument>
     </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Router\UrlSigner" class="EasyCorp\Bundle\EasyAdminBundle\Router\UrlSigner">
       <argument>%env(APP_SECRET)%</argument>
@@ -8158,7 +8343,10 @@
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator"/>
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Menu\MenuItemMatcher"/>
     </service>
-    <service id="EasyCorp\Bundle\EasyAdminBundle\Menu\MenuItemMatcher" class="EasyCorp\Bundle\EasyAdminBundle\Menu\MenuItemMatcher"/>
+    <service id="EasyCorp\Bundle\EasyAdminBundle\Menu\MenuItemMatcher" class="EasyCorp\Bundle\EasyAdminBundle\Menu\MenuItemMatcher">
+      <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator"/>
+      <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminRouteGenerator"/>
+    </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository" class="EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository">
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider"/>
       <argument type="service" id="doctrine"/>
@@ -8267,6 +8455,7 @@
     <service id="EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\BooleanConfigurator" class="EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\BooleanConfigurator">
       <tag name="ea.field_configurator"/>
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator"/>
+      <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Security\AuthorizationChecker"/>
       <argument type="service" id="security.csrf.token_manager" on-invalid="null"/>
     </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CollectionConfigurator" class="EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CollectionConfigurator">
@@ -8289,7 +8478,7 @@
     </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CountryConfigurator" class="EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CountryConfigurator">
       <tag name="ea.field_configurator"/>
-      <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Asset\AssetPackage"/>
+      <argument type="service" id="twig"/>
     </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CurrencyConfigurator" class="EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CurrencyConfigurator">
       <tag name="ea.field_configurator"/>
@@ -8358,6 +8547,12 @@
     <service id="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Icon" class="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Icon" shared="false">
       <tag name="twig.component"/>
       <argument type="service" id="EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider"/>
+    </service>
+    <service id="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Flag" class="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Flag" shared="false">
+      <tag name="twig.component"/>
+    </service>
+    <service id="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Alert" class="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Alert" shared="false">
+      <tag name="twig.component"/>
     </service>
     <service id="doctrine.fixtures_load_command" class="Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand">
       <tag name="console.command" command="doctrine:fixtures:load"/>
@@ -8720,7 +8915,7 @@
       </call>
     </service>
     <service id="maker.auto_command.make_twig_component" class="Symfony\Bundle\MakerBundle\Command\MakerCommand">
-      <tag name="console.command" command="make:twig-component" description="Create a twig (or live) component"/>
+      <tag name="console.command" command="make:twig-component" description="Create a Twig (or Live) component"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="maker.maker.make_twig_component"/>
       <argument type="service" id="maker.file_manager"/>
@@ -8730,7 +8925,7 @@
         <argument>make:twig-component</argument>
       </call>
       <call method="setDescription">
-        <argument>Create a twig (or live) component</argument>
+        <argument>Create a Twig (or Live) component</argument>
       </call>
     </service>
     <service id="maker.auto_command.make_controller" class="Symfony\Bundle\MakerBundle\Command\MakerCommand">
@@ -10317,12 +10512,27 @@
       <argument type="service" id=".doctrine.orm.default_metadata_driver.inner"/>
       <argument type="service" id=".service_locator.BxSdgVt"/>
     </service>
+    <service id="doctrine.dbal.default_schema_asset_filter_manager" class="Doctrine\Bundle\DoctrineBundle\Dbal\SchemaAssetsFilterManager">
+      <argument type="collection">
+        <argument type="service" id="doctrine_migrations.schema_filter_listener"/>
+      </argument>
+    </service>
     <service id="doctrine.dbal.logging_middleware.default" class="Doctrine\DBAL\Logging\Middleware">
+      <tag name="monolog.logger" channel="doctrine"/>
       <argument type="service" id="monolog.logger.doctrine"/>
     </service>
     <service id="doctrine.dbal.debug_middleware.default" class="Doctrine\Bundle\DoctrineBundle\Middleware\DebugMiddleware">
       <argument type="service" id="doctrine.debug_data_holder"/>
       <argument type="service" id="debug.stopwatch" on-invalid="null"/>
+      <call method="setConnectionName">
+        <argument>default</argument>
+      </call>
+    </service>
+    <service id="doctrine.dbal.idle_connection_middleware.default" class="Doctrine\Bundle\DoctrineBundle\Middleware\IdleConnectionMiddleware">
+      <argument type="service" id="doctrine.dbal.connection_expiries"/>
+      <argument type="collection">
+        <argument key="default">600</argument>
+      </argument>
       <call method="setConnectionName">
         <argument>default</argument>
       </call>
@@ -10512,10 +10722,12 @@
       <configurator service="debug.debug_logger_configurator" method="pushDebugLogger"/>
     </service>
     <service id="monolog.handler.null_internal" class="Monolog\Handler\NullHandler"/>
-    <service id=".service_locator.kwKnG3z" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.WBY8UNJ" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="ea:Icon" type="service_closure" id="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Icon"/>
+        <argument key="ea:Flag" type="service_closure" id="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Flag"/>
+        <argument key="ea:Alert" type="service_closure" id="EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Alert"/>
       </argument>
     </service>
     <service id="EasyCorp\Bundle\EasyAdminBundle\Registry\DashboardControllerRegistry" class="EasyCorp\Bundle\EasyAdminBundle\Registry\DashboardControllerRegistry">
@@ -10815,12 +11027,13 @@
         <argument key="string" type="service_closure" id="type_info.resolver.string"/>
       </argument>
     </service>
-    <service id=".service_locator.zqtiJAI" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.ECaP3MA" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="session_factory" type="service_closure" id="session.factory" on-invalid="ignore"/>
         <argument key="logger" type="service_closure" id="monolog.logger" on-invalid="ignore"/>
         <argument key="session_collector" type="service_closure" id="data_collector.request.session_collector" on-invalid="ignore"/>
+        <argument key="request_stack" type="service_closure" id="request_stack" on-invalid="ignore"/>
       </argument>
     </service>
     <service id=".service_locator.TwypoFh" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -10839,7 +11052,7 @@
         <argument key="request_stack" type="service_closure" id="request_stack"/>
       </argument>
     </service>
-    <service id=".service_locator.jeoT_vU" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.NXTTdTW" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="security.token_storage" type="service_closure" id="security.token_storage"/>
@@ -10847,7 +11060,7 @@
         <argument key="security.authenticator.managers_locator" type="service_closure" id="security.authenticator.managers_locator" on-invalid="ignore"/>
         <argument key="request_stack" type="service_closure" id="request_stack"/>
         <argument key="security.firewall.map" type="service_closure" id="security.firewall.map"/>
-        <argument key="security.user_checker" type="service_closure" id="security.user_checker"/>
+        <argument key="security.user_checker_locator" type="service_closure" id="security.user_checker_locator"/>
         <argument key="security.firewall.event_dispatcher_locator" type="service_closure" id="security.firewall.event_dispatcher_locator"/>
         <argument key="security.csrf.token_manager" type="service_closure" id="security.csrf.token_manager" on-invalid="ignore"/>
       </argument>
@@ -11043,6 +11256,7 @@
           </service>
         </argument>
       </argument>
+      <argument type="collection"/>
     </service>
     <service id="var_dumper.contextualized_cli_dumper.inner" class="Symfony\Component\VarDumper\Dumper\CliDumper">
       <argument>null</argument>
@@ -11724,7 +11938,7 @@
     <service id=".maker.auto_command.make_twig_component.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>make:twig-component</argument>
       <argument type="collection"/>
-      <argument>Create a twig (or live) component</argument>
+      <argument>Create a Twig (or Live) component</argument>
       <argument>false</argument>
       <argument type="service_closure" id="maker.auto_command.make_twig_component"/>
     </service>
@@ -12269,7 +12483,7 @@
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
-    <service id=".service_locator.DSbTGon" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.T1kVy8z" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="Symfony\Bridge\Twig\Extension\CsrfRuntime" type="service_closure" id="twig.runtime.security_csrf"/>
@@ -12278,6 +12492,7 @@
         <argument key="Symfony\Component\Form\FormRenderer" type="service_closure" id="twig.form.renderer"/>
         <argument key="Symfony\Bridge\Twig\Extension\ImportMapRuntime" type="service_closure" id="twig.runtime.importmap"/>
         <argument key="Symfony\UX\StimulusBundle\Twig\UxControllersTwigRuntime" type="service_closure" id="stimulus.ux_controllers_twig_runtime"/>
+        <argument key="Symfony\UX\Turbo\Twig\TurboRuntime" type="service_closure" id="turbo.twig.runtime"/>
         <argument key="Symfony\UX\TwigComponent\Twig\ComponentRuntime" type="service_closure" id="ux.twig_component.twig.component_runtime"/>
       </argument>
     </service>
@@ -12386,12 +12601,14 @@
     <service id="Doctrine\Common\Persistence\ManagerRegistry" alias="doctrine"/>
     <service id="database_connection" alias="doctrine.dbal.default_connection" public="true"/>
     <service id="doctrine.dbal.event_manager" alias="doctrine.dbal.default_connection.event_manager"/>
+    <service id=".Doctrine\DBAL\Connection $default.connection" alias="doctrine.dbal.default_connection"/>
     <service id="Doctrine\DBAL\Connection $defaultConnection" alias="doctrine.dbal.default_connection"/>
     <service id="Doctrine\ORM\EntityManagerInterface" alias="doctrine.orm.default_entity_manager"/>
     <service id="doctrine.orm.entity_manager" alias="doctrine.orm.default_entity_manager" public="true"/>
     <service id="doctrine.orm.default_metadata_cache" alias="cache.doctrine.orm.default.metadata"/>
     <service id="doctrine.orm.default_result_cache" alias="cache.doctrine.orm.default.result"/>
     <service id="doctrine.orm.default_query_cache" alias="cache.doctrine.orm.default.query"/>
+    <service id=".Doctrine\ORM\EntityManagerInterface $default.entity_manager" alias="doctrine.orm.default_entity_manager"/>
     <service id="Doctrine\ORM\EntityManagerInterface $defaultEntityManager" alias="doctrine.orm.default_entity_manager"/>
     <service id="doctrine.orm.default_entity_manager.event_manager" alias="doctrine.dbal.default_connection.event_manager"/>
     <service id="doctrine.migrations.metadata_storage" alias="doctrine.migrations.storage.table_storage"/>

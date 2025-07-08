@@ -87,41 +87,31 @@ function Produits() {
     };
 
     const handleReservation = async () => {
-        if (!vehicule || !clientId || !startDate || !endDate) {
-            alert('Veuillez remplir toutes les informations et être connecté.');
-            return;
-        }
-        const prixTotale = vehicule.prix_jour * calculateDays();
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert('Vous devez être connecté pour réserver.');
-            return;
-        }
-        const data = await api.post('/reserver', {
-            voiture_id: vehicule.id,
-            client_id: clientId,
-            date_debut: startDate.toISOString().slice(0, 10),
-            date_fin: endDate.toISOString().slice(0, 10),
-            prix_totale: prixTotale
-        });
-        if (data.success) {
-            let client = null;
-            try {
-                client = JSON.parse(localStorage.getItem('user'));
-            } catch (e) {}
+        if (!startDate || !endDate || !vehicule) return;
+
+        try {
+            const res = await api.post('/reserver', {
+                voiture_id: vehicule.id,
+                date_debut: startDate.toISOString().slice(0, 10),
+                date_fin: endDate.toISOString().slice(0, 10),
+                prix_totale: calculateDays() * vehicule.prix_jour,
+                lieu_depart: vehicule.lieu_depart || null
+            });
+
+            // Si succès, tu peux passer les infos à la page de confirmation
             navigate('/confirmation-reservation', {
                 state: {
-                    client,
+                    client: JSON.parse(localStorage.getItem('user')),
                     vehicule,
                     reservation: {
                         date_debut: startDate.toISOString().slice(0, 10),
                         date_fin: endDate.toISOString().slice(0, 10),
-                        prix_totale: prixTotale
+                        prix_totale: calculateDays() * vehicule.prix_jour
                     }
                 }
             });
-        } else {
-            alert(data.message || 'Erreur lors de la réservation');
+        } catch (error) {
+            alert("Erreur lors de la réservation : " + (error.message || "inconnue"));
         }
     };
 

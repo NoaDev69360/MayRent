@@ -5,4 +5,12 @@ return [PHP_INT_MAX, [
         'properties' => [],
         'methods' => [],
     ],
+    'EasyCorp\\Bundle\\EasyAdminBundle\\Twig\\Component\\Flag' => [
+        'properties' => [],
+        'methods' => [],
+    ],
+    'EasyCorp\\Bundle\\EasyAdminBundle\\Twig\\Component\\Alert' => [
+        'properties' => [],
+        'methods' => [],
+    ],
 ]];

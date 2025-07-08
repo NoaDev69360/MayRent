@@ -31,7 +31,7 @@ function ConfirmationReservation() {
                     <div className="car-main-section">
                         <div className="car-image-container">
                             {vehicule.image ? (
-                                <img src={vehicule.image.startsWith('http') ? vehicule.image : `/MayRent/back/public/uploads/voitures/${vehicule.image}`} alt={vehicule.modele} className="car-image" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
+                                <img src={vehicule.image.startsWith('http') ? vehicule.image : `/MayRent/back/public/uploads/voitures/${vehicule.image}`} alt={vehicule.modele} className="car-image" style={{objectFit: 'cover', width: '400px', height: '300px'}} />
                             ) : (
                                 <div className="car-image"></div>
                             )}
