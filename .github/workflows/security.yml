@@ -17,6 +17,9 @@ jobs:
         with:
           php-version: '8.2'
 
+      - name: Setup .env for Symfony
+        run: echo 'APP_ENV=test\nDATABASE_URL=mysql://root:root@127.0.0.1:3306/test_db' > MayRent/back/.env
+
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
         working-directory: back

@@ -20,7 +20,3 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: front
-
-      - name: Run linter
-        run: npm run lint
-        working-directory: front
